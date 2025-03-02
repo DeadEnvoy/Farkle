@@ -20,11 +20,11 @@ The concept of the game was based on the dice game from **Kingdom Come: Delivera
 
 To play with an innkeeper, simply talk to them and select the appropriate option in the dialogue:
 
-![](https://i.imgur.com/lnl6TaT.png)
+![](https://i.imgur.com/LSgaJbA.png)
 
 To play with other players, you also need to select the option, but from the context menu:
 
-![](https://i.imgur.com/YRXhm59.png)  
+![](https://i.imgur.com/yHtWaac.png)  
   
 ## **Development:**
 
