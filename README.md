@@ -7,7 +7,7 @@
 ## **Current Features:**
 - Playing against other players (addon holders).
 - Playing against NPCs (innkeepers), similar to other RPGs.  
-- Safe Mode (uses /roll as the method for calculating dice roll results).
+- [PvP] Safe Mode (uses /roll as the method for calculating dice roll results).
 
 ## **Rules ([EN](https://kingdom-come-deliverance.fandom.com/wiki/Dice)/[RU](https://tinyurl.com/bdheky4n)):**
 
