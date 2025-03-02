@@ -1,0 +1,27 @@
+## Interface: 110100
+## Title: Farkle
+## Title-ruRU: Игра в кости
+## IconTexture: Interface/Buttons/UI-GroupLoot-Dice-Up.blp
+## Notes: A two-player tabletop dice game.
+## Notes-ruRU: Настольная игра для двух игроков.
+## Author: DeadEnvoy
+## Version: 0.8.0.1
+
+Localization\enUS.lua
+Localization\ruRU.lua
+
+Core\API.lua
+
+Core\Farkle.lua
+Core\GameLogic.lua
+
+UI\GameBoard.xml
+
+Core\GameMode\PvE\NPCs.lua
+Core\GameMode\PvE\Logic.lua
+Core\GameMode\PvE\Gossip.lua
+Core\GameMode\PvP\UnitPopup.lua
+Core\GameMode\PvP\Callbacks.lua
+Core\GameMode\PvP\ChatFilter.lua
+
+## SavedVariables: FarkleDB

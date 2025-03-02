@@ -1,0 +1,357 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+    <FontString name="FontStringTemplate" inherits="GameFontNormalSmall" font="Interface\AddOns\Farkle\Fonts\VINQUE.OTF" virtual="true">
+        <FontHeight val="18"/>
+    </FontString>
+    
+    <Frame name="FarkleBoard" parent="UIParent" toplevel="true" hidden="true" enableMouse="true">
+        <Size>
+            <AbsDimension x="865" y="680"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        
+        <Frames>
+            <Button parentKey="CloseButton" inherits="UIPanelCloseButton">
+                <Anchors>
+                    <Anchor point="TOPRIGHT" x="-14" y="-14"/>
+                </Anchors>
+            </Button>
+
+            <Button name="$parent_Input_Key_Q" virtual="true" hidden="true">
+                <NormalTexture file="Interface\AddOns\Farkle\Media\Keys\KEY_Q_NORMAL"/>
+                <DisabledTexture file="Interface\AddOns\Farkle\Media\Keys\KEY_Q_NORMAL"/>
+                <HighlightTexture file="Interface\AddOns\Farkle\Media\Keys\KEY_SINGLE_HIGHLIGHT"/>
+                <PushedTexture file="Interface\AddOns\Farkle\Media\Keys\KEY_Q_PUSHED"/>
+                <Size x="32" y="29"/>
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT" x="-75" y="215"/>
+                </Anchors>
+            </Button>
+
+            <Frame parentKey="fontString" parent="FarkleBoard_Input_Key_Q">
+                <Size x="80" y="29"/>
+                <Anchors>
+                    <Anchor point="LEFT" x="-90" y="0"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString parentKey="text" inherits="FontStringTemplate">
+                            <Color r="0.800" g="0.800" b="0.800" a="1"/>
+                                <Anchors>
+                                    <Anchor point="RIGHT" x="0" y="0"/>
+                                </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+
+            <Button name="$parent_Input_Key_E" virtual="true" hidden="true">
+                <NormalTexture file="Interface\AddOns\Farkle\Media\Keys\KEY_E_NORMAL"/>
+                <DisabledTexture file="Interface\AddOns\Farkle\Media\Keys\KEY_E_NORMAL"/>
+                <HighlightTexture file="Interface\AddOns\Farkle\Media\Keys\KEY_SINGLE_HIGHLIGHT"/>
+                <PushedTexture file="Interface\AddOns\Farkle\Media\Keys\KEY_E_PUSHED"/>
+                <Size x="32" y="29"/>
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT" x="-75" y="170"/>
+                </Anchors>
+            </Button>
+
+            <Frame parentKey="fontString" parent="FarkleBoard_Input_Key_E">
+                <Size x="80" y="29"/>
+                <Anchors>
+                    <Anchor point="LEFT" x="-90" y="0"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString parentKey="text" inherits="FontStringTemplate">
+                            <Color r="0.800" g="0.800" b="0.800" a="1"/>
+                                <Anchors>
+                                    <Anchor point="RIGHT" x="0" y="0"/>
+                                </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+
+            <Button name="$parent_Input_Key_T" virtual="true" hidden="true">
+                <NormalTexture file="Interface\AddOns\Farkle\Media\Keys\KEY_T_NORMAL"/>
+                <DisabledTexture file="Interface\AddOns\Farkle\Media\Keys\KEY_T_NORMAL"/>
+                <HighlightTexture file="Interface\AddOns\Farkle\Media\Keys\KEY_SINGLE_HIGHLIGHT"/>
+                <PushedTexture file="Interface\AddOns\Farkle\Media\Keys\KEY_T_PUSHED"/>
+                <Size x="32" y="29"/>
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT" x="-75" y="125"/>
+                </Anchors>
+            </Button>
+
+            <Frame parentKey="fontString" parent="FarkleBoard_Input_Key_T">
+                <Size x="80" y="29"/>
+                <Anchors>
+                    <Anchor point="LEFT" x="-90" y="0"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString parentKey="text" inherits="FontStringTemplate">
+                            <Color r="0.800" g="0.800" b="0.800" a="1"/>
+                                <Anchors>
+                                    <Anchor point="RIGHT" x="0" y="0"/>
+                                </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+
+            <Button name="$parent_Input_Key_ESC" virtual="true" hidden="true">
+                <NormalTexture file="Interface\AddOns\Farkle\Media\Keys\KEY_ESC_NORMAL"/>
+                <DisabledTexture file="Interface\AddOns\Farkle\Media\Keys\KEY_ESC_NORMAL"/>
+                <HighlightTexture file="Interface\AddOns\Farkle\Media\Keys\KEY_LONG_HIGHLIGHT"/>
+                <PushedTexture file="Interface\AddOns\Farkle\Media\Keys\KEY_ESC_PUSHED"/>
+                <Size x="53" y="29"/>
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT" x="-75" y="80"/>
+                </Anchors>
+            </Button>
+
+            <Frame parentKey="fontString" parent="FarkleBoard_Input_Key_ESC">
+                <Size x="80" y="29"/>
+                <Anchors>
+                    <Anchor point="LEFT" x="-90" y="0"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString parentKey="text" inherits="FontStringTemplate">
+                            <Color r="0.800" g="0.800" b="0.800" a="1"/>
+                                <Anchors>
+                                    <Anchor point="RIGHT" x="0" y="0"/>
+                                </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+
+            <Frame parentKey="Coin" parent="FarkleBoard" hidden="true">
+                <Size x="125" y="125"/>
+                <Anchors>
+                    <Anchor point="CENTER" x="0" y="0"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture parentKey="Texture" file="Interface\AddOns\Farkle\Media\coin_1">
+                            <Size x="125" y="125"/>
+                            <Anchors>
+                                <Anchor point="CENTER"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+            </Frame>
+
+            <Button parentKey="ReadyPlayerButton" virtual="true">
+                <NormalTexture atlas="UI-LFG-RoleIcon-Ready" desaturated="true"/>
+                <DisabledTexture atlas="UI-LFG-RoleIcon-Ready" desaturated="false"/>
+                <Size x="80" y="80"/>
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT" x="80" y="80"/>
+                </Anchors>
+            </Button>
+
+            <Button parentKey="ReadyOpponentButton" virtual="true">
+                <NormalTexture atlas="UI-LFG-RoleIcon-Ready" desaturated="true"/>
+                <DisabledTexture atlas="UI-LFG-RoleIcon-Ready" desaturated="false"/>
+                <Size x="80" y="80"/>
+                <Anchors>
+                    <Anchor point="TOPRIGHT" x="-80" y="-80"/>
+                </Anchors>
+            </Button>
+                <Frame parentKey="TimerFrame" parent="FarkleBoard" hidden="true">
+                <Size x="80" y="80"/>
+                <Anchors>
+                    <Anchor point="TOPLEFT" x="70" y="-75"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture atlas="common-radiobutton-circle">
+                            <Size x="80" y="80"/>
+                            <Anchors>
+                                <Anchor point="CENTER"/>
+                            </Anchors>
+                        </Texture>
+                        <FontString parentKey="Text" text="30" inherits="GameFontNormalSmall" font="Interface\AddOns\Farkle\Fonts\VINQUE.OTF">
+                        <FontHeight val="24"/>
+                        <Color r="0.659" g="0.659" b="0.659" a="1"/>
+                        <Shadow>
+                            <Offset x="1" y="-1"/>
+                            <Color r="0" g="0" b="0"/>
+                        </Shadow>
+                        <Anchors>
+                            <Anchor point="CENTER" x="0" y="0"/>
+                        </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+            <Frame parentKey="PlayerBoard" virtual="true" hidden="true">
+                <Size x="300" y="300"/>
+                <Anchors>
+                    <Anchor point="BOTTOMLEFT" x="75" y="0"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY"> 
+                        <FontString parentKey="TotalPlayerLabel" inherits="FontStringTemplate">
+                            <Color r="0.800" g="0.800" b="0.800" a="1"/>
+                            <Shadow>
+                                <Offset x="1" y="-1"/>
+                                <Color r="0" g="0" b="0"/>
+                            </Shadow>
+                            <Anchors>
+                                <Anchor point="BOTTOMLEFT" x="0" y="220"/>
+                            </Anchors>
+                        </FontString>
+                        <FontString parentKey="TotalPlayer" inherits="FontStringTemplate" text="0" justifyH="LEFT">
+                            <Shadow>
+                                <Offset x="1" y="-1"/>
+                                <Color r="0" g="0" b="0"/>
+                            </Shadow>
+                            <Anchors>
+                                <Anchor point="BOTTOMLEFT" x="0" y="195"/>
+                            </Anchors>
+                        </FontString>
+                        <FontString parentKey="RoundPlayerLabel" inherits="FontStringTemplate">
+                            <Color r="0.800" g="0.800" b="0.800" a="1"/>
+                            <Shadow>
+                                <Offset x="1" y="-1"/>
+                                <Color r="0" g="0" b="0"/>
+                            </Shadow>
+                            <Anchors>
+                                <Anchor point="BOTTOMLEFT" x="0" y="160"/>
+                            </Anchors>
+                        </FontString>
+                        <FontString parentKey="RoundPlayer" inherits="FontStringTemplate" text="0" justifyH="LEFT">
+                            <Shadow>
+                                <Offset x="1" y="-1"/>
+                                <Color r="0" g="0" b="0"/>
+                            </Shadow>
+                            <Anchors>
+                                <Anchor point="BOTTOMLEFT" x="0" y="135"/>
+                            </Anchors>
+                        </FontString>
+                        <FontString parentKey="HoldPlayerLabel" inherits="FontStringTemplate">
+                            <Color r="0.800" g="0.800" b="0.800" a="1"/>
+                            <Shadow>
+                                <Offset x="1" y="-1"/>
+                                <Color r="0" g="0" b="0"/>
+                            </Shadow>
+                            <Anchors>
+                                <Anchor point="BOTTOMLEFT" x="0" y="100"/>
+                            </Anchors>
+                        </FontString>
+                        <FontString parentKey="HoldPlayer" inherits="FontStringTemplate" text="0" justifyH="LEFT">
+                            <Shadow>
+                                <Offset x="1" y="-1"/>
+                                <Color r="0" g="0" b="0"/>
+                            </Shadow>
+                            <Anchors>
+                                <Anchor point="BOTTOMLEFT" x="0" y="75"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+            <Frame parentKey="OpponentBoard" virtual="true" hidden="true">
+                <Size x="300" y="300"/>
+                <Anchors>
+                    <Anchor point="TOPRIGHT" x="-75" y="-75"/>
+                </Anchors>
+                <Layers>
+                    <Layer level="OVERLAY">
+                        <FontString parentKey="TotalOpponentLabel" inherits="FontStringTemplate">
+                            <Color r="0.800" g="0.800" b="0.800" a="1"/>
+                            <Shadow>
+                                <Offset x="1" y="-1"/>
+                                <Color r="0" g="0" b="0"/>
+                            </Shadow>
+                            <Anchors>
+                                <Anchor point="TOPRIGHT" x="0" y="0"/>
+                            </Anchors>
+                        </FontString>
+                        <FontString parentKey="TotalOpponent" inherits="FontStringTemplate" text="0" justifyH="RIGHT">
+                            <Color r="1" g="0.25" b="0.25" a="1"/>
+                            <Shadow>
+                                <Offset x="1" y="-1"/>
+                                <Color r="0" g="0" b="0"/>
+                            </Shadow>
+                            <Anchors>
+                                <Anchor point="TOPRIGHT" x="0" y="-25"/>
+                            </Anchors>
+                        </FontString>
+                        <FontString parentKey="RoundOpponentLabel" inherits="FontStringTemplate" text="Раунд">
+                            <Color r="0.800" g="0.800" b="0.800" a="1"/>
+                            <Shadow>
+                                <Offset x="1" y="-1"/>
+                                <Color r="0" g="0" b="0"/>
+                            </Shadow>
+                            <Anchors>
+                                <Anchor point="TOPRIGHT" x="0" y="-60"/>
+                            </Anchors>
+                        </FontString>
+                        <FontString parentKey="RoundOpponent" inherits="FontStringTemplate" text="0" justifyH="RIGHT">
+                            <Color r="1" g="0.25" b="0.25" a="1"/>
+                            <Shadow>
+                                <Offset x="1" y="-1"/>
+                                <Color r="0" g="0" b="0"/>
+                            </Shadow>
+                            <Anchors>
+                                <Anchor point="TOPRIGHT" x="0" y="-85"/>
+                            </Anchors>
+                        </FontString>
+                        <FontString parentKey="HoldOpponentLabel" inherits="FontStringTemplate">
+                            <Color r="0.800" g="0.800" b="0.800" a="1"/>
+                            <Shadow>
+                                <Offset x="1" y="-1"/>
+                                <Color r="0" g="0" b="0"/>
+                            </Shadow>
+                            <Anchors>
+                                <Anchor point="TOPRIGHT" x="0" y="-120"/>
+                            </Anchors>
+                        </FontString>
+                        <FontString parentKey="HoldOpponent" inherits="FontStringTemplate" text="0" justifyH="RIGHT">
+                            <Color r="1" g="0.25" b="0.25" a="1"/>
+                            <Shadow>
+                                <Offset x="1" y="-1"/>
+                                <Color r="0" g="0" b="0"/>
+                            </Shadow>
+                            <Anchors>
+                                <Anchor point="TOPRIGHT" x="0" y="-145"/>
+                            </Anchors>
+                        </FontString>
+                    </Layer>
+                </Layers>
+            </Frame>
+        </Frames>
+
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="FarkleBoardTexture" file="Interface/AddOns/Farkle/Media/Board">
+                    <Size>
+                        <AbsDimension x="950" y="743.5"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY"> 
+                <Texture parentKey="Logo" file="Interface/AddOns/Farkle/Media/Logo_enUS" hidden="true">
+                        <Size>
+                            <AbsDimension x="575" y="450"/>
+                        </Size>
+                        <Anchors>
+                            <Anchor point="CENTER"/>
+                        </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+    </Frame>
+    <Script file="GameBoard.lua"/>
+</Ui>
