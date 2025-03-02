@@ -5,7 +5,7 @@
 **Farkle** is a classic dice game where players take turns rolling six dice to score points by making combinations, aiming to reach a target score before their opponent.  
 
 ## **Current Features:**
-- Playing against other players (addon owners).  
+- Playing against other players (addon holders).
 - Playing against NPCs (innkeepers), similar to other RPGs.  
 - Safe Mode (uses /roll as the method for calculating dice roll results).
 
