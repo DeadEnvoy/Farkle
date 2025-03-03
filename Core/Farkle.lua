@@ -1,6 +1,7 @@
 local _, farkle = ...
 
 local L = farkle.L
+local C_Farkle = farkle.API
 
 string.startswith = function(self, str)
     ---@diagnostic disable-next-line: param-type-mismatch
@@ -39,7 +40,7 @@ local function decline_name(name, gender)
     }
 
     local exceptions = {
-        female = { "кс", "ль", "ик"}
+        female = {"кс", "ль", "ик"}
     }
 
     local last_char, last_two = name:sub(-2), name:sub(-4)
