@@ -213,9 +213,9 @@ function C_Farkle.Victory(type)
 
     if C_Farkle.IsPvP() and type ~= "offline" then
         if GetLocale() == "ruRU" then
-            SendChatMessage(format(L["CHAT_MESSAGE_TEXT_RU"], decline_name(C_Farkle.GetOpponentInfo("name"), C_Farkle.GetOpponentInfo("sex")) .. "-" .. C_Farkle.GetOpponentInfo("realm")), "EMOTE")
+            SendChatMessage(format(L["EMOTE_MESSAGE_TEXT_RU"], decline_name(C_Farkle.GetOpponentInfo("name"), C_Farkle.GetOpponentInfo("sex")) .. "-" .. C_Farkle.GetOpponentInfo("realm")), "EMOTE")
         else
-            SendChatMessage(format(L["CHAT_MESSAGE_TEXT"], C_Farkle.GetOpponentInfo("name") .. "-" .. C_Farkle.GetOpponentInfo("realm")), "EMOTE")
+            SendChatMessage(format(L["EMOTE_MESSAGE_TEXT"], C_Farkle.GetOpponentInfo("name") .. "-" .. C_Farkle.GetOpponentInfo("realm")), "EMOTE")
         end
     end
 
@@ -316,7 +316,7 @@ end
 EventRegistry:RegisterFrameEventAndCallback("PLAYER_REGEN_DISABLED", function(ownerID, ...)
     if C_Farkle.IsPlaying() then
         C_Farkle.SendAddonMessage("combat"); C_Farkle:ExitGame();
-        DEFAULT_CHAT_FRAME:AddMessage(L.COMBAT_STARTED, 1.000, 0.125, 0.125)
+        DEFAULT_CHAT_FRAME:AddMessage(DICE_ICON .. " " .. L.COMBAT_STARTED, 1.000, 0.125, 0.125)
     end
 end)
 
