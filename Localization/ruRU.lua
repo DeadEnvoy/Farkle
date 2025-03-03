@@ -18,7 +18,6 @@ if GetLocale() == "ruRU" then
     L["GAME_NAME"] = "Игра в кости"
     L["POINTS"] = "очков"
     L["GAME_DURATION"] = "Длительность партии"
-    L["DURATION_LABEL"] = "Ну что ж, давай сыграем! Решай, сколько раундов выдержишь."
     L["DURATION_1"] = "Лёгкий разогрев."
     L["DURATION_2"] = "В меру, но с интересом."
     L["DURATION_3"] = "Всё или ничего!"
@@ -47,6 +46,7 @@ if GetLocale() == "ruRU" then
 
     -- Innkeeper (NPC)
     L["DICE_OPTION"] = "Мне бы хотелось сыграть в кости."
+    L["DURATION_LABEL"] = "Ну что ж, давай сыграем! Решай, сколько раундов выдержишь."
 
     -- Errors
     L["NO_ADDON"] = "Игрок не имеет игральных костей."

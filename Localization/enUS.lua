@@ -11,7 +11,6 @@ end
 L["GAME_NAME"] = "Farkle"
 L["POINTS"] = "points"
 L["GAME_DURATION"] = "Game Duration"
-L["DURATION_LABEL"] = "Alright then, let's play! Tell me, how long can you keep up?"
 L["DURATION_1"] = "A quick warm-up."
 L["DURATION_2"] = "A fair challenge."
 L["DURATION_3"] = "All or nothing!"
@@ -39,6 +38,7 @@ L["OFF"] = "Off"
 
 -- Innkeeper (NPC)
 L["DICE_OPTION"] = "I would like to play dice."
+L["DURATION_LABEL"] = "Alright then, let's play! Tell me, how long can you keep up?"
 
 -- Errors
 L["NO_ADDON"] = "The player does not have dice."
@@ -81,13 +81,13 @@ L["OPPONENT_GAVE_UP"] = "%s gave up."
 L["OPPONENT_OFFLINE"] = "Connection with the opponent has been lost."
 
 -- Chat Messages
-L["CHAT_MESSAGE_TEXT"] = "has defeated %s in a game of dice."
-L["CHAT_MESSAGE_FORMAT"] = "%s has defeated %s in a game of dice"
-L["CHAT_MESSAGE_PATTERN"] = "^has defeated (%S+) in a game of dice%.$"
+L["EMOTE_MESSAGE_TEXT"] = "has defeated %s in a game of dice."
+L["EMOTE_MESSAGE_PATTERN"] = "^has defeated (%S+) in a game of dice%.$"
+L["SYSTEM_MESSAGE_FORMAT"] = "%s has defeated %s in a game of dice"
 
-L["CHAT_MESSAGE_TEXT_RU"] = "обыгрывает %s в кости."
-L["CHAT_MESSAGE_FORMAT_RU"] = "%s обыгрывает %s в кости."
-L["CHAT_MESSAGE_PATTERN_RU"] = "^обыгрывает (%S+) в кости%.$"
+L["EMOTE_MESSAGE_TEXT_RU"] = "обыгрывает %s в кости."
+L["EMOTE_MESSAGE_PATTERN_RU"] = "^обыгрывает (%S+) в кости%.$"
+L["SYSTEM_MESSAGE_FORMAT_RU"] = "%s обыгрывает %s в кости."
 
 -- Tutorial
 L["RULES"] = "Rules"

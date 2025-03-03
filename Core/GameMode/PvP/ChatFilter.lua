@@ -3,7 +3,7 @@ local _, farkle = ...
 local L = farkle.L
 
 local function OnEvent(self, event, msg, sender, ...)
-    local target = msg:match(L.CHAT_MESSAGE_PATTERN) or msg:match(L.CHAT_MESSAGE_PATTERN_RU)
+    local target = msg:match(L.EMOTE_MESSAGE_PATTERN) or msg:match(L.EMOTE_MESSAGE_PATTERN_RU)
     if target then
         local senderName, senderRealm = strsplit("-", sender)
         if senderRealm == GetNormalizedRealmName() then
@@ -17,9 +17,9 @@ local function OnEvent(self, event, msg, sender, ...)
             local chatFrame = _G["ChatFrame" .. i]
             if chatFrame and chatFrame:IsEventRegistered("CHAT_MSG_SYSTEM") then
                 if GetLocale() == "ruRU" then
-                    chatFrame:AddMessage(format(farkle.L.CHAT_MESSAGE_FORMAT_RU, sender, target), 1.000, 1.000, 0.000, 1)
+                    chatFrame:AddMessage(format(farkle.L.SYSTEM_MESSAGE_FORMAT_RU, sender, target), 1.000, 1.000, 0.000, 1)
                 else
-                    chatFrame:AddMessage(format(farkle.L.CHAT_MESSAGE_FORMAT, sender, target), 1.000, 1.000, 0.000, 1)
+                    chatFrame:AddMessage(format(farkle.L.SYSTEM_MESSAGE_FORMAT, sender, target), 1.000, 1.000, 0.000, 1)
                 end
             end
         end
@@ -28,7 +28,7 @@ local function OnEvent(self, event, msg, sender, ...)
 end
 
 local function FilterEmoteMessages(self, event, msg, sender, ...)
-    if msg:match(farkle.L.CHAT_MESSAGE_PATTERN) or msg:match(farkle.L.CHAT_MESSAGE_PATTERN_RU) then
+    if msg:match(farkle.L.EMOTE_MESSAGE_PATTERN) or msg:match(farkle.L.EMOTE_MESSAGE_PATTERN_RU) then
         return true
     end
     return false
