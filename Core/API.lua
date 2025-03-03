@@ -1,8 +1,9 @@
 local _, farkle = ...
 
-local L = farkle.L
+farkle.API = {}
 
-C_Farkle = farkle
+local L = farkle.L
+local C_Farkle = farkle.API
 
 DICE_ICON = "|TInterface/Buttons/UI-GroupLoot-Dice-Up:14:14|t"
 
@@ -18,10 +19,9 @@ function C_Farkle.CheckOnline()
         C_Farkle.SendAddonMessage("online-check"); farkle.waitingForResponse = true
         C_Timer.After(5, function()
             if farkle.waitingForResponse and (C_Farkle.IsPlaying() and C_Farkle.IsPvP()) then
-                C_Farkle.Victory("offline"); farkle.waitingForResponse = false
-            else
-                farkle.waitingForResponse = false
+                C_Farkle.Victory("offline")
             end
+            farkle.waitingForResponse = false
         end)
     end
 end
