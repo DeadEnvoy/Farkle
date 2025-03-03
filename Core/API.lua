@@ -2,11 +2,9 @@ local _, farkle = ...
 
 local L = farkle.L
 
-DICE_ICON = "|TInterface/Buttons/UI-GroupLoot-Dice-Up:14:14|t"
-
-farkle.playable = nil
-
 C_Farkle = farkle
+
+DICE_ICON = "|TInterface/Buttons/UI-GroupLoot-Dice-Up:14:14|t"
 
 local getFullName = function(name, realm)
     if realm == nil then realm = GetNormalizedRealmName() end
@@ -111,8 +109,10 @@ function C_Farkle.IsPlaying()
 end
 
 function C_Farkle.UnitCanPlay(unit)
-    if farkle.players[getFullName(UnitFullName(unit))] then
-        return farkle.players[getFullName(UnitFullName(unit))]
+    if unit == "target" and farkle.players[getFullName(UnitFullName("target"))] then
+        return true
+    elseif farkle.players[unit] then
+        return true
     end
 end
 
