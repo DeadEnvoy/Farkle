@@ -2,10 +2,10 @@
 ## Title: Farkle
 ## Title-ruRU: Игра в кости
 ## IconTexture: Interface/Buttons/UI-GroupLoot-Dice-Up.blp
-## Notes: A two-player tabletop dice game.
+## Notes: A medieval board game for two players.
 ## Notes-ruRU: Настольная игра для двух игроков.
 ## Author: DeadEnvoy
-## Version: 0.8.0.1
+## Version: 0.8.0.2
 
 Localization\enUS.lua
 Localization\ruRU.lua
