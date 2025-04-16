@@ -486,5 +486,6 @@ farkle.innkeepers = {
     {id = 210940}, -- Willa Arnes
     -- < Undermine > -- 
     {id = 231045}, -- Paks Topskimmer
-    {id = 228092} -- Hawlins
+    {id = 228092}, -- Hawlins
+    {id = 234461} -- Cherry Sherry
 }
