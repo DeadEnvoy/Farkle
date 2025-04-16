@@ -4,7 +4,7 @@ farkle.L = {}; local L = farkle.L
 
 local function replaceDiceIcons(text)
     return text:gsub("%[(%d+%+?)%]", function(number)
-        return "|TInterface/AddOns/Farkle/Media/Icons/dice_" .. number .. ":16:16:0:-4:50:50:0:50:0:50|t"
+        return "|TInterface/AddOns/Farkle/Media/Icons/dice_" .. number .. ":15:15:0:-6:50:50:0:50:0:50|t"
     end)
 end
 
@@ -29,10 +29,14 @@ Recommended for playing with strangers and/or for high-stakes games.
 -- Offer and responses
 L["OFFER_MENU"] = "Play Dice"
 L["OFFER_SENT"] = "The offer has been sent."
+L["OFFER_ALREADY_SENT"] = "You have already sent an offer."
+L["CANNOT_SEND_OFFER"] = "You cannot send an offer right now."
 L["OFFER_LABEL"] = "%s wants to play dice with you."
 L["OFFER_SUBTEXT"] = "Goal: %s, Safe Mode: %s."
 L["OFFER_DECLINED"] = "%s declined the offer to play."
 L["OFFER_PLAYING"] = "%s is currently playing."
+L["OFFER_HAS_ACTIVE_REQUEST"] = "%s already has a pending offer."
+L["OFFER_HAS_SENT_REQUEST"] = "%s has already offered to play."
 L["ON"] = "On"
 L["OFF"] = "Off"
 
