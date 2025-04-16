@@ -4,29 +4,29 @@ farkle.API = {}
 
 local L = farkle.L
 local C_Farkle = farkle.API
+local S_Timer = farkle.API; S_Timer.activeTimers = {}
+local S_Sound = farkle.API; S_Sound.activeSounds = {}
 
-DICE_ICON = "|TInterface/Buttons/UI-GroupLoot-Dice-Up:14:14|t"
+CHAT_DICE_ICON = "|TInterface/Buttons/UI-GroupLoot-Dice-Up:14:14|t"
 
-local getFullName = function(name, realm)
-    if realm == nil then realm = GetNormalizedRealmName() end
-    return format("%s-%s", name, realm)
-end
-
-farkle.waitingForResponse = false
+farkle.status = {
+    isOffline = false,
+    offer = {
+        isSent = nil
+    }
+}
 
 function C_Farkle.CheckOnline()
-    if farkle.waitingForResponse then return end; if C_Farkle.IsPvP() then
-        C_Farkle.SendAddonMessage("online-check"); farkle.waitingForResponse = true
+    if farkle.status.isOffline then return end; if C_Farkle.IsPvP() then
+        C_Farkle.SendAddonMessage("online-check"); farkle.status.isOffline = true
         C_Timer.After(5, function()
-            if farkle.waitingForResponse and (C_Farkle.IsPlaying() and C_Farkle.IsPvP()) then
+            if farkle.status.isOffline and (C_Farkle.IsPlaying() and C_Farkle.IsPvP()) then
                 C_Farkle.Victory("offline")
             end
-            farkle.waitingForResponse = false
+            farkle.status.isOffline = false
         end)
     end
 end
-
-S_Timer = {}; S_Timer.activeTimers = {}
 
 function S_Timer.After(delay, callback)
     local timer = C_Timer.NewTimer(delay, function(self)
@@ -46,8 +46,6 @@ function S_Timer:CancelAllTimers()
     end
     wipe(S_Timer.activeTimers); C_Farkle:CancelTimer()
 end
-
-S_Sound = {}; S_Sound.activeSounds = {}
 
 function S_Sound.Play(soundPath, channel)
     if S_Sound.activeSounds[soundPath] then
@@ -84,24 +82,36 @@ function C_Farkle:EnableButton(button)
 end
 
 function C_Farkle:SwitchPlayerTurn()
-    C_Farkle:ClearBoard(); if C_Farkle.IsPlayerTurn() then
+    if C_Farkle.IsPlayerTurn() then
         farkle.player.turn = false; farkle.opponent.turn = true
-        C_Farkle:AddInfoMessage("BOTTOM", L["OPPONENT_TURN"], 1)
-        if C_Farkle.IsPvP() then C_Farkle.SendAddonMessage("turn") end
-        C_Farkle:DisableButton(FarkleBoard.Input_Key_Q); C_Farkle:DisableButton(FarkleBoard.Input_Key_E);
+        C_Farkle:AddInfoMessage("BOTTOM", L["OPPONENT_TURN"], (C_Farkle.IsPvE() and 1 or 1 + (select(3, GetNetStats()) / 500)))
+        UIFrameFadeIn(FarkleBoard.PlayerBoard, 0.25, FarkleBoard.PlayerBoard:GetAlpha(), 0.50)
+        C_Farkle:DisableButton(FarkleBoard.Input_Key_Q); C_Farkle:DisableButton(FarkleBoard.Input_Key_E)
         FarkleBoard.Input_Key_Q:Hide(); FarkleBoard.Input_Key_E:Hide()
-        S_Timer.After(1, function()
-            UIFrameFadeIn(FarkleBoard.PlayerBoard, 0.25, 1, 0.50); UIFrameFadeIn(FarkleBoard.OpponentBoard, 0.25, 0.50, 1)
+        S_Timer.After((C_Farkle.IsPvE() and 1 or 1 + (select(3, GetNetStats()) / 500)), function()
+            UIFrameFadeIn(FarkleBoard.OpponentBoard, 0.25, FarkleBoard.OpponentBoard:GetAlpha(), 1)
+            if C_Farkle.IsPvE() then
+                S_Timer.After(0.25, function()
+                    C_Farkle.RollDice(C_Farkle.GetBoardInfo("roll"), 6)
+                end)
+            else
+                C_Farkle.CheckOnline()
+            end
         end)
     else
         farkle.player.turn = true; farkle.opponent.turn = false
-        C_Farkle:AddInfoMessage("BOTTOM", L["YOUR_TURN"], 1)
+        C_Farkle:AddInfoMessage("BOTTOM", L["YOUR_TURN"], 1);
+        UIFrameFadeIn(FarkleBoard.OpponentBoard, 0.25, FarkleBoard.OpponentBoard:GetAlpha(), 0.50)
         S_Timer.After(1, function()
             FarkleBoard.Input_Key_Q:Show(); FarkleBoard.Input_Key_E:Show()
-            UIFrameFadeIn(FarkleBoard.PlayerBoard, 0.25, 0.50, 1); UIFrameFadeIn(FarkleBoard.OpponentBoard, 0.25, 1, 0.50)
-            C_Farkle:DisableButton(FarkleBoard.Input_Key_Q); C_Farkle:DisableButton(FarkleBoard.Input_Key_E);
+            UIFrameFadeIn(FarkleBoard.PlayerBoard, 0.25, FarkleBoard.PlayerBoard:GetAlpha(), 1)
+            C_Farkle:DisableButton(FarkleBoard.Input_Key_Q); C_Farkle:DisableButton(FarkleBoard.Input_Key_E)
+            S_Timer.After(0.25, function()
+                C_Farkle.RollDice(C_Farkle.GetBoardInfo("roll"), 6)
+            end)
         end)
     end
+    C_Farkle:ClearBoard()
 end
 
 function C_Farkle.IsPlaying()
@@ -109,18 +119,17 @@ function C_Farkle.IsPlaying()
 end
 
 function C_Farkle.UnitCanPlay(unit)
-    if unit == "target" and farkle.players[getFullName(UnitFullName("target"))] then
-        return true
-    elseif farkle.players[unit] then
+    if farkle.players[unit] then
         return true
     end
 end
 
 function C_Farkle:ClearBoard()
     if #farkle.board["dices"] > 0 then
-        for i = 1, #farkle.board["dices"] do
-            if farkle.board["dices"] and farkle.board["dices"][i] then
-                farkle.board["dices"][i]:Hide(); farkle.board["dices"][i] = nil
+        for i = #farkle.board["dices"], 1, -1 do
+            if farkle.board["dices"][i] then
+                farkle.board["dices"][i]:Hide()
+                farkle.board["dices"][i] = nil
             end
         end
     end
@@ -242,9 +251,7 @@ end
 
 function C_Farkle:ExitGame(type)
     S_Timer:CancelAllTimers(); S_Sound.StopAll();
-    if C_Farkle.IsPvE() then
-        C_GossipInfo.CloseGossip()
-    elseif type == 1 then
+    if type == 1 then
         C_Farkle.SendAddonMessage("quit")
     end
     C_Farkle:ClearBoard(); C_Farkle:ResetBoard(); C_Farkle:ClearChat()
