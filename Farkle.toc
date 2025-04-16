@@ -1,11 +1,11 @@
-## Interface: 110100
+## Interface: 110100, 110105
 ## Title: Farkle
 ## Title-ruRU: Игра в кости
 ## IconTexture: Interface/Buttons/UI-GroupLoot-Dice-Up.blp
 ## Notes: A medieval board game for two players.
 ## Notes-ruRU: Настольная игра для двух игроков.
 ## Author: DeadEnvoy
-## Version: 0.8.0.2
+## Version: 0.8.1.0
 
 Localization\enUS.lua
 Localization\ruRU.lua
@@ -20,6 +20,7 @@ UI\GameBoard.xml
 Core\GameMode\PvE\NPCs.lua
 Core\GameMode\PvE\Logic.lua
 Core\GameMode\PvE\Gossip.lua
+Core\GameMode\PvE\Gossip_DUI.lua
 Core\GameMode\PvP\UnitPopup.lua
 Core\GameMode\PvP\Callbacks.lua
 Core\GameMode\PvP\ChatFilter.lua
