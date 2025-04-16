@@ -10,7 +10,7 @@ end
 
 local function replaceDiceIcons(text)
     return text:gsub("%[(%d+%+?)%]", function(number)
-        return "|TInterface/AddOns/Farkle/Media/Icons/dice_" .. number .. ":16:16:0:-4:50:50:0:50:0:50|t"
+        return "|TInterface/AddOns/Farkle/Media/Icons/dice_" .. number .. ":15:15:0:-6:50:50:0:50:0:50|t"
     end)
 end
 
@@ -36,11 +36,15 @@ if GetLocale() == "ruRU" then
     -- Offer and responses
     L["OFFER_MENU"] = "Сыграть в кости"
     L["OFFER_SENT"] = "Предложение было отправлено."
+    L["OFFER_ALREADY_SENT"] = "Вы уже отправили запрос."
+    L["CANNOT_SEND_OFFER"] = "Сейчас вы не можете отправить запрос."
     L["OFFER_LABEL"] = "%s хочет сыграть с вами в кости."
     L["OFFER_SUBTEXT"] = "Очки: %s, Безопасный режим: %s."
     L["OFFER_DECLINED_MALE"] = "%s отказался от игры в кости."
     L["OFFER_DECLINED_FEMALE"] = "%s отказалась от игры в кости."
     L["OFFER_PLAYING"] = "%s уже находится в игре."
+    L["OFFER_HAS_ACTIVE_REQUEST"] = "%s уже имеет активный запрос."
+    L["OFFER_HAS_SENT_REQUEST"] = "%s уже отправил кому-то запрос."
     L["ON"] = "вкл"
     L["OFF"] = "выкл"
 
