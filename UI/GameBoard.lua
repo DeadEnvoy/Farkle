@@ -1,6 +1,8 @@
 local addonName, farkle = ...
 
 local L = farkle.L
+local C_Farkle = farkle.API
+local S_Timer = farkle.API
 
 if GetLocale() == "ruRU" then
     FarkleBoard.Logo:SetTexture("Interface/AddOns/Farkle/Media/Logo_ruRU")
@@ -38,8 +40,9 @@ FarkleBoard = FarkleBoard
 local function CheckKey(key)
     local keys = {
         "MOVEFORWARD", "STRAFELEFT", "MOVEBACKWARD", "STRAFERIGHT", "JUMP", "EXTRAACTIONBUTTON1",
+        "TOGGLECHARACTER0", "TOGGLEPROFESSIONBOOK", "TOGGLETALENTS", "TOGGLEACHIEVEMENT", "TOGGLEQUESTLOG", "TOGGLECOLLECTIONS", "TOGGLEENCOUNTERJOURNAL", 
         "ACTIONBUTTON1", "ACTIONBUTTON2", "ACTIONBUTTON3", "ACTIONBUTTON4", "ACTIONBUTTON5", "ACTIONBUTTON6", "ACTIONBUTTON7", "ACTIONBUTTON8", "ACTIONBUTTON9", "ACTIONBUTTON10", "ACTIONBUTTON11", "ACTIONBUTTON12",
-        "MULTIACTIONBAR1BUTTON1", "MULTIACTIONBAR1BUTTON2", "MULTIACTIONBAR1BUTTON3", "MULTIACTIONBAR1BUTTON4", "MULTIACTIONBAR1BUTTON5", "MULTIACTIONBAR1BUTTON6", "MULTIACTIONBAR1BUTTON7", "MULTIACTIONBAR1BUTTON8", "MULTIACTIONBAR1BUTTON9", "MULTIACTIONBAR1BUTTON10", "MULTIACTIONBAR1BUTTON11", "MULTIACTIONBAR1BUTTON12", "MULTIACTIONBAR2BUTTON1", "MULTIACTIONBAR2BUTTON2", "MULTIACTIONBAR2BUTTON3", "MULTIACTIONBAR2BUTTON4", "MULTIACTIONBAR2BUTTON5", "MULTIACTIONBAR2BUTTON6", "MULTIACTIONBAR2BUTTON7", "MULTIACTIONBAR2BUTTON8", "MULTIACTIONBAR2BUTTON9", "MULTIACTIONBAR2BUTTON10", "MULTIACTIONBAR2BUTTON11", "MULTIACTIONBAR2BUTTON12", "MULTIACTIONBAR3BUTTON1", "MULTIACTIONBAR3BUTTON2", "MULTIACTIONBAR3BUTTON3", "MULTIACTIONBAR3BUTTON4", "MULTIACTIONBAR3BUTTON5", "MULTIACTIONBAR3BUTTON6", "MULTIACTIONBAR3BUTTON7", "MULTIACTIONBAR3BUTTON8", "MULTIACTIONBAR3BUTTON9", "MULTIACTIONBAR3BUTTON10", "MULTIACTIONBAR3BUTTON11", "MULTIACTIONBAR3BUTTON12", "MULTIACTIONBAR4BUTTON1", "MULTIACTIONBAR4BUTTON2", "MULTIACTIONBAR4BUTTON3", "MULTIACTIONBAR4BUTTON4", "MULTIACTIONBAR4BUTTON5", "MULTIACTIONBAR4BUTTON6", "MULTIACTIONBAR4BUTTON7", "MULTIACTIONBAR4BUTTON8", "MULTIACTIONBAR4BUTTON9", "MULTIACTIONBAR4BUTTON10", "MULTIACTIONBAR4BUTTON11", "MULTIACTIONBAR4BUTTON12", "MULTIACTIONBAR5BUTTON1", "MULTIACTIONBAR5BUTTON2", "MULTIACTIONBAR5BUTTON3", "MULTIACTIONBAR5BUTTON4", "MULTIACTIONBAR5BUTTON5", "MULTIACTIONBAR5BUTTON6", "MULTIACTIONBAR5BUTTON7", "MULTIACTIONBAR5BUTTON8", "MULTIACTIONBAR5BUTTON9", "MULTIACTIONBAR5BUTTON10", "MULTIACTIONBAR5BUTTON11", "MULTIACTIONBAR5BUTTON12", "MULTIACTIONBAR6BUTTON1", "MULTIACTIONBAR6BUTTON2", "MULTIACTIONBAR6BUTTON3", "MULTIACTIONBAR6BUTTON4", "MULTIACTIONBAR6BUTTON5", "MULTIACTIONBAR6BUTTON6", "MULTIACTIONBAR6BUTTON7", "MULTIACTIONBAR6BUTTON8", "MULTIACTIONBAR6BUTTON9", "MULTIACTIONBAR6BUTTON10", "MULTIACTIONBAR6BUTTON11", "MULTIACTIONBAR6BUTTON12", "MULTIACTIONBAR7BUTTON1", "MULTIACTIONBAR7BUTTON2", "MULTIACTIONBAR7BUTTON3", "MULTIACTIONBAR7BUTTON4", "MULTIACTIONBAR7BUTTON5", "MULTIACTIONBAR7BUTTON6", "MULTIACTIONBAR7BUTTON7", "MULTIACTIONBAR7BUTTON8", "MULTIACTIONBAR7BUTTON9", "MULTIACTIONBAR7BUTTON10", "MULTIACTIONBAR7BUTTON11", "MULTIACTIONBAR7BUTTON12"
+        "MULTIACTIONBAR1BUTTON1", "MULTIACTIONBAR1BUTTON2", "MULTIACTIONBAR1BUTTON3", "MULTIACTIONBAR1BUTTON4", "MULTIACTIONBAR1BUTTON5", "MULTIACTIONBAR1BUTTON6", "MULTIACTIONBAR1BUTTON7", "MULTIACTIONBAR1BUTTON8", "MULTIACTIONBAR1BUTTON9", "MULTIACTIONBAR1BUTTON10", "MULTIACTIONBAR1BUTTON11", "MULTIACTIONBAR1BUTTON12", "MULTIACTIONBAR2BUTTON1", "MULTIACTIONBAR2BUTTON2", "MULTIACTIONBAR2BUTTON3", "MULTIACTIONBAR2BUTTON4", "MULTIACTIONBAR2BUTTON5", "MULTIACTIONBAR2BUTTON6", "MULTIACTIONBAR2BUTTON7", "MULTIACTIONBAR2BUTTON8", "MULTIACTIONBAR2BUTTON9", "MULTIACTIONBAR2BUTTON10", "MULTIACTIONBAR2BUTTON11", "MULTIACTIONBAR2BUTTON12", "MULTIACTIONBAR3BUTTON1", "MULTIACTIONBAR3BUTTON2", "MULTIACTIONBAR3BUTTON3", "MULTIACTIONBAR3BUTTON4", "MULTIACTIONBAR3BUTTON5", "MULTIACTIONBAR3BUTTON6", "MULTIACTIONBAR3BUTTON7", "MULTIACTIONBAR3BUTTON8", "MULTIACTIONBAR3BUTTON9", "MULTIACTIONBAR3BUTTON10", "MULTIACTIONBAR3BUTTON11", "MULTIACTIONBAR3BUTTON12", "MULTIACTIONBAR4BUTTON1", "MULTIACTIONBAR4BUTTON2", "MULTIACTIONBAR4BUTTON3", "MULTIACTIONBAR4BUTTON4", "MULTIACTIONBAR4BUTTON5", "MULTIACTIONBAR4BUTTON6", "MULTIACTIONBAR4BUTTON7", "MULTIACTIONBAR4BUTTON8", "MULTIACTIONBAR4BUTTON9", "MULTIACTIONBAR4BUTTON10", "MULTIACTIONBAR4BUTTON11", "MULTIACTIONBAR4BUTTON12", "MULTIACTIONBAR5BUTTON1", "MULTIACTIONBAR5BUTTON2", "MULTIACTIONBAR5BUTTON3", "MULTIACTIONBAR5BUTTON4", "MULTIACTIONBAR5BUTTON5", "MULTIACTIONBAR5BUTTON6", "MULTIACTIONBAR5BUTTON7", "MULTIACTIONBAR5BUTTON8", "MULTIACTIONBAR5BUTTON9", "MULTIACTIONBAR5BUTTON10", "MULTIACTIONBAR5BUTTON11", "MULTIACTIONBAR5BUTTON12", "MULTIACTIONBAR6BUTTON1", "MULTIACTIONBAR6BUTTON2", "MULTIACTIONBAR6BUTTON3", "MULTIACTIONBAR6BUTTON4", "MULTIACTIONBAR6BUTTON5", "MULTIACTIONBAR6BUTTON6", "MULTIACTIONBAR6BUTTON7", "MULTIACTIONBAR6BUTTON8", "MULTIACTIONBAR6BUTTON9", "MULTIACTIONBAR6BUTTON10", "MULTIACTIONBAR6BUTTON11", "MULTIACTIONBAR6BUTTON12", "MULTIACTIONBAR7BUTTON1", "MULTIACTIONBAR7BUTTON2", "MULTIACTIONBAR7BUTTON3", "MULTIACTIONBAR7BUTTON4", "MULTIACTIONBAR7BUTTON5", "MULTIACTIONBAR7BUTTON6", "MULTIACTIONBAR7BUTTON7", "MULTIACTIONBAR7BUTTON8", "MULTIACTIONBAR7BUTTON9", "MULTIACTIONBAR7BUTTON10", "MULTIACTIONBAR7BUTTON11", "MULTIACTIONBAR7BUTTON12",
     }
     for _, bindingKey in pairs(keys) do
         if GetBindingKey(bindingKey) == key then
@@ -52,63 +55,44 @@ local function Input_Key_Q()
     if not C_Farkle.IsPlaying() then return end
     if FarkleBoard.TutorialFrame:IsShown() then return end
     if not FarkleBoard.Input_Key_Q:IsEnabled() then return end
-    C_Farkle:CancelTimer(); C_Farkle.SendAddonMessage("cancel_timer");
-    if farkle.calculateScore(farkle.player["diceHold"]) > 0 then
-        local dices, score, delay = {}, {}, 0
-            for i, y in pairs(farkle.player["diceHold"]) do
-                table.insert(dices, tonumber(y))
-                S_Timer.After(delay, function() 
-                    table.insert(score, tonumber(y))
-                    farkle.board["dices"][i]:Hide();
-                    farkle.player["diceHold"][i] = nil
-                end)
-                delay = delay + 0.5
-            end
+    C_Farkle:CancelTimer();
+    local dices, score, delay = {}, {}, 0
+    for i, y in pairs(farkle.player["diceHold"]) do
+        table.insert(dices, tonumber(y))
+        S_Timer.After(delay, function() 
+            table.insert(score, tonumber(y))
+            farkle.board["dices"][i]:Hide();
+            farkle.player["diceHold"][i] = nil
+        end)
+        delay = delay + 0.5
+    end
 
-            for i = 1, 6 do
-                if farkle.board["dices"] and farkle.board["dices"][i] then
-                    farkle.board["dices"][i]:SetScript("OnMouseUp", function() end)
-                end
-            end
-
-            local diceHoldStrings = {}
-            for i, y in pairs(farkle.player["diceHold"]) do
-                table.insert(diceHoldStrings, i .. ":" .. y)
-            end
-            
-            delay = #dices / 2 + 0.5
-            C_Farkle.SendAddonMessage(format("hold:%s:%s", delay, table.concat(diceHoldStrings, ":")))
-            S_Timer.After(delay, function()
-                if C_Farkle.IsPlaying() then
-                    for i = 1, #dices do farkle.player["diceHold"][i] = nil end
-                    C_Farkle:SetScore("player", farkle.player.total + (farkle.player.hold + farkle.player.round), 0, 0);
-                    dices, score, delay = {}, {}, 0
-                    S_Timer.After(0.8, function()
-                        if C_Farkle.IsPlayerTurn() and farkle.player.total >= C_Farkle.GetBoardInfo("total") then
-                            C_Farkle.SendAddonMessage("lose"); C_Farkle.Victory("won")
-                        else
-                            C_Farkle:SwitchPlayerTurn()
-                            if C_Farkle.IsPvP() then
-                                C_Farkle.CheckOnline()
-                            elseif C_Farkle.IsPvE() then
-                                S_Timer.After(1.5, function()
-                                    C_Farkle.RollDice(C_Farkle.GetBoardInfo("roll"), 6)
-                                end)
-                            end
-                        end
-                        C_Farkle:ClearBoard(); farkle.player["diceHold"] = {}; farkle.player.selected = 0
-                    end)
-                end
-            end)
-    else
-        C_Farkle:SetValue("rolls", 0)
-        C_Farkle:SetScore("player", farkle.player.total + (farkle.player.hold + farkle.player.round), 0, 0);
-        if C_Farkle.IsPlayerTurn() and farkle.player.total >= C_Farkle.GetBoardInfo("total") then
-            C_Farkle.SendAddonMessage("lose"); C_Farkle.Victory("won")
-        else
-            C_Farkle:SwitchPlayerTurn()
+    for i = 1, 6 do
+        if farkle.board["dices"] and farkle.board["dices"][i] then
+            farkle.board["dices"][i]:SetScript("OnMouseUp", function() end)
         end
     end
+
+    local diceHoldStrings = {}
+    for i, y in pairs(farkle.player["diceHold"]) do
+        table.insert(diceHoldStrings, i .. ":" .. y)
+    end
+
+    delay = #dices / 2 + 0.5
+    C_Farkle.SendAddonMessage(format("hold:true:%s:%s", delay, table.concat(diceHoldStrings, ":")))
+    S_Timer.After(delay, function()
+        for i = 1, #dices do farkle.player["diceHold"][i] = nil end
+        C_Farkle:SetScore("player", farkle.player.total + (farkle.player.hold + farkle.player.round), 0, 0);
+        dices, score, delay = {}, {}, 0
+        S_Timer.After(0.8, function()
+            if C_Farkle.IsPlayerTurn() and farkle.player.total >= C_Farkle.GetBoardInfo("total") then
+                C_Farkle.SendAddonMessage("lose"); C_Farkle.Victory("won")
+            else
+                C_Farkle:SwitchPlayerTurn()
+            end
+            C_Farkle:ClearBoard()
+        end)
+    end)
     C_Farkle:DisableButton(FarkleBoard.Input_Key_Q); C_Farkle:DisableButton(FarkleBoard.Input_Key_E);
 end
 
@@ -128,10 +112,13 @@ local function Input_Key_E()
     if not C_Farkle.IsPlaying() then return end
     if FarkleBoard.TutorialFrame:IsShown() then return end
     if not FarkleBoard.Input_Key_E:IsEnabled() then return end
-    C_Farkle:CancelTimer(); C_Farkle.SendAddonMessage("cancel_timer");
+    C_Farkle:CancelTimer();
     C_Farkle:DisableButton(FarkleBoard.Input_Key_Q); C_Farkle:DisableButton(FarkleBoard.Input_Key_E);
     if C_Farkle.IsPlayerTurn() then
         local dices, score, delay = {}, {}, 0
+        local selected = 0; for _ in pairs(farkle.player["diceHold"]) do
+            selected = selected + 1
+        end
 
         for i = 1, 6 do
             if farkle.board["dices"] and farkle.board["dices"][i] then
@@ -148,35 +135,28 @@ local function Input_Key_E()
             table.insert(dices, tonumber(y))
             S_Timer.After(delay, function()
                 table.insert(score, tonumber(y))
-                farkle.board["dices"][i]:Hide();
+                farkle.board["dices"][i]:Hide()
                 farkle.player["diceHold"][i] = nil
             end)
             delay = delay + 0.5
         end
 
         delay = #dices / 2 + 0.5
-        C_Farkle.SendAddonMessage(format("hold:%s:%s", delay, table.concat(diceHoldStrings, ":")))
+        C_Farkle.SendAddonMessage(format("hold:false:%s:%s", delay, table.concat(diceHoldStrings, ":")))
 
-        S_Timer.After(delay + 0.8, function ()
-            C_Farkle:ClearBoard();
-            if farkle.player.selected == 6 then
-                farkle.player.selected = 0;
-                C_Farkle.RollDice(C_Farkle.GetBoardInfo("roll"), 6, delay);
+        S_Timer.After(delay + 0.8, function()
+            if (#farkle.board["dices"] - selected) == 0 then
+                C_Farkle.RollDice(C_Farkle.GetBoardInfo("roll"), 6)
                 C_Farkle:SetValue("rolls", C_Farkle.GetValue("rolls") + 1)
             else
-                C_Farkle.RollDice(C_Farkle.GetBoardInfo("roll"), 6 - farkle.player.selected, delay)
+                C_Farkle.RollDice(C_Farkle.GetBoardInfo("roll"), #farkle.board["dices"] - selected)
             end
+            C_Farkle:ClearBoard()
         end)
 
         S_Timer.After(delay, function()
-            if C_Farkle.IsPlaying() then
-                for i = 1, #dices do farkle.player["diceHold"][i] = nil end
-                C_Farkle:SetScore("player", farkle.player.total, farkle.player.round + farkle.calculateScore(score), 0)
-                dices, score, delay = {}, {}, 0
-                S_Timer.After(1, function()
-                    C_Farkle:ClearBoard(); farkle.player["diceHold"] = {}
-                end)
-            end
+            for i = 1, #dices do farkle.player["diceHold"][i] = nil end
+            C_Farkle:SetScore("player", farkle.player.total, farkle.player.round + farkle.calculateScore(score), 0)
         end)
     end
 end
@@ -203,45 +183,51 @@ end
 
 local function Input_Key_ESC()
     if C_Farkle.IsPlaying() then
-        StaticPopupDialogs["GIVE_UP_POPUP"] = {
-            text = L["GIVE_UP_OFFER"],
-            button1 = YES,
-            button2 = NO,
-            OnAccept = function()
-                S_Timer:CancelAllTimers();
-                C_Farkle.SendAddonMessage("surrender")
-                C_Farkle.Defeat("gave_up");
-            end,
-            OnCancel = function() end,
-            timeout = 10,
-            whileDead = false,
-            hideOnEscape = true,
-            preferredIndex = 3,
-            OnShow = function(self)
-                self:ClearAllPoints(); self:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-            end,
-        }
-        StaticPopup_Show("GIVE_UP_POPUP")
+        if not StaticPopup_Visible("GIVE_UP_POPUP") then
+            StaticPopupDialogs["GIVE_UP_POPUP"] = {
+                text = L["GIVE_UP_OFFER"],
+                button1 = YES,
+                button2 = NO,
+                OnAccept = function()
+                    S_Timer:CancelAllTimers();
+                    C_Farkle.SendAddonMessage("surrender")
+                    C_Farkle.Defeat("gave_up");
+                end,
+                OnCancel = function() end,
+                timeout = 10,
+                whileDead = false,
+                hideOnEscape = true,
+                preferredIndex = 3,
+                OnShow = function(self)
+                    self:ClearAllPoints(); self:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+                end,
+            }
+            StaticPopup_Show("GIVE_UP_POPUP")
+        else
+            StaticPopup_Hide("GIVE_UP_POPUP"); StaticPopupDialogs["GIVE_UP_POPUP"].OnCancel()
+        end
     elseif C_Farkle.HasOpponent() then
-        StaticPopupDialogs["EXIT_GAME_POPUP"] = {
-            text = L["EXIT_GAME_OFFER"],
-            button1 = YES,
-            button2 = NO,
-            OnAccept = function()
-                C_Farkle:ExitGame(1)
-            end,
-            OnCancel = function() end,
-            timeout = 10,
-            whileDead = false,
-            hideOnEscape = true,
-            preferredIndex = 3,
-            OnShow = function(self)
-                self:ClearAllPoints(); self:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
-            end,
-        }
-        StaticPopup_Show("EXIT_GAME_POPUP")
-    else
-        C_Farkle:ExitGame(1)
+        if not StaticPopup_Visible("EXIT_GAME_POPUP") then
+            StaticPopupDialogs["EXIT_GAME_POPUP"] = {
+                text = L["EXIT_GAME_OFFER"],
+                button1 = YES,
+                button2 = NO,
+                OnAccept = function()
+                    C_Farkle:ExitGame(1)
+                end,
+                OnCancel = function() end,
+                timeout = 10,
+                whileDead = false,
+                hideOnEscape = true,
+                preferredIndex = 3,
+                OnShow = function(self)
+                    self:ClearAllPoints(); self:SetPoint("CENTER", UIParent, "CENTER", 0, 0)
+                end,
+            }
+            StaticPopup_Show("EXIT_GAME_POPUP")
+        else
+            StaticPopup_Hide("EXIT_GAME_POPUP"); StaticPopupDialogs["EXIT_GAME_POPUP"].OnCancel()
+        end
     end
 end
 
@@ -251,7 +237,6 @@ local function Input_Key_D()
         FarkleBoard.TutorialFrame.Page:SetText("(2/2)")
         FarkleBoard.TutorialFrame.Label:SetText(L.TUTORIAL_COMBINATIONS_LABEL)
         FarkleBoard.TutorialFrame.Text:SetText(L.TUTORIAL_COMBINATIONS);
-        FarkleBoard.TutorialFrame.Text:SetSpacing(2)
 
         C_Farkle:DisableButton(FarkleBoard.TutorialFrame.NextPageButton)
         C_Farkle:EnableButton(FarkleBoard.TutorialFrame.PrevPageButton)
@@ -264,14 +249,67 @@ local function Input_Key_A()
         FarkleBoard.TutorialFrame.Page:SetText("(1/2)")
         FarkleBoard.TutorialFrame.Label:SetText(L.TUTORIAL_BASIC_LABEL)
         FarkleBoard.TutorialFrame.Text:SetText(L.TUTORIAL_BASIC);
-        FarkleBoard.TutorialFrame.Text:SetSpacing(4)
 
         C_Farkle:DisableButton(FarkleBoard.TutorialFrame.PrevPageButton)
         C_Farkle:EnableButton(FarkleBoard.TutorialFrame.NextPageButton)
     end
 end
 
+local function DisableMicroButtons()
+	CharacterMicroButton.disabledTooltip = nil;
+	CharacterMicroButton:Disable();
+	
+	ProfessionMicroButton.disabledTooltip = nil;
+	ProfessionMicroButton:Disable();
+
+	PlayerSpellsMicroButton.disabledTooltip = nil;
+	PlayerSpellsMicroButton:Disable();
+
+    AchievementMicroButton.disabledTooltip = nil;
+	AchievementMicroButton:Disable();
+
+	QuestLogMicroButton.disabledTooltip = nil;
+	QuestLogMicroButton:Disable();
+
+    StoreMicroButton.disabledTooltip = nil;
+	StoreMicroButton:Disable();
+
+	EJMicroButton.disabledTooltip = nil;
+	EJMicroButton:Disable();
+
+	CollectionsMicroButton.disabledTooltip = nil;
+	CollectionsMicroButton:Disable();
+end
+
+FarkleBoard:HookScript("OnShow", DisableMicroButtons)
+FarkleBoard:HookScript("OnHide", UpdateMicroButtons)
+
+hooksecurefunc("UpdateMicroButtons", function()
+    if FarkleBoard:IsShown() then
+        DisableMicroButtons()
+    end
+end)
+
+local function SecureFrameIsShown()
+    if GameMenuFrame and GameMenuFrame:IsShown() or
+        SettingsPanel and SettingsPanel:IsShown() or
+        AddonList and AddonList:IsShown() or
+        PVEFrame and PVEFrame:IsShown() or
+        AchievementFrame and AchievementFrame:IsShown() or
+        WorldMapFrame and WorldMapFrame:IsShown() or
+        CommunitiesFrame and CommunitiesFrame:IsShown() or
+        CollectionsJournal and CollectionsJournal:IsShown() or
+        ProfessionsBookFrame and ProfessionsBookFrame:IsShown() or
+        MacroFrame and MacroFrame:IsShown() then
+        return true
+    end
+end
+
 FarkleBoard:SetScript("OnKeyDown", function(self, key)
+    if UnitAffectingCombat("player") or SecureFrameIsShown() then
+        return self:SetPropagateKeyboardInput(true)
+    end
+
     if key == "Q" then
         self:SetPropagateKeyboardInput(false); Input_Key_Q()
     elseif key == "E" then
@@ -448,21 +486,10 @@ EventRegistry:RegisterFrameEventAndCallback("CHAT_MSG_EMOTE", function(ownerID, 
 end)
 
 
-FarkleBoard.Input_Key_Q:SetScript("OnClick", function(self)
-    Input_Key_Q();
-end)
-
-FarkleBoard.Input_Key_E:SetScript("OnClick", function(self)
-    Input_Key_E();
-end)
-
-FarkleBoard.Input_Key_T:SetScript("OnClick", function(self)
-    Input_Key_T();
-end)
-
-FarkleBoard.Input_Key_ESC:SetScript("OnClick", function(self)
-    Input_Key_ESC();
-end)
+FarkleBoard.Input_Key_Q:SetScript("OnClick", Input_Key_Q)
+FarkleBoard.Input_Key_E:SetScript("OnClick", Input_Key_E)
+FarkleBoard.Input_Key_T:SetScript("OnClick", Input_Key_T)
+FarkleBoard.Input_Key_ESC:SetScript("OnClick", Input_Key_ESC)
 
 FarkleBoard.ReadyKeyButton = CreateFrame("Button", nil, FarkleBoard); FarkleBoard.ReadyKeyButton:SetPoint("LEFT", FarkleBoard, 90, 0)
 FarkleBoard.ReadyKeyButton:SetSize(32, 29); FarkleBoard.ReadyKeyButton:SetParent(FarkleBoard);
