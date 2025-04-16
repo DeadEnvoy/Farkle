@@ -31,7 +31,7 @@ function C_Farkle.SendAddonMessage(prefix)
         if not UnitInParty(realm == GetNormalizedRealmName() and name or unit) then
             C_ChatInfo.SendAddonMessage("Farkle", "checkup", "WHISPER", realm == GetNormalizedRealmName() and name or unit)
         elseif UnitInParty(realm == GetNormalizedRealmName() and name or unit) then
-            C_ChatInfo.SendAddonMessage("Farkle", format("checkup:%s", unit), IsInInstance() and "INSTANCE_CHAT" or "RAID")
+            C_ChatInfo.SendAddonMessage("Farkle", format("checkup:%s", unit), (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
         end
     elseif prefix:startswith("offer") then
         local _, unit, goal, safety = strsplit(":", prefix, 4)
@@ -39,7 +39,7 @@ function C_Farkle.SendAddonMessage(prefix)
         if not UnitInParty(realm == GetNormalizedRealmName() and name or unit) then
             C_ChatInfo.SendAddonMessage("Farkle", format("offer:%s:%s:%s:%s", select(2, UnitClass("player")), UnitSex("player"), goal, safety), "WHISPER", realm == GetNormalizedRealmName() and name or unit)
         elseif UnitInParty(realm == GetNormalizedRealmName() and name or unit) then
-            C_ChatInfo.SendAddonMessage("Farkle", format("offer:%s:%s:%s:%s:%s", unit, select(2, UnitClass("player")), UnitSex("player"), goal, safety), IsInInstance() and "INSTANCE_CHAT" or "RAID")
+            C_ChatInfo.SendAddonMessage("Farkle", format("offer:%s:%s:%s:%s:%s", unit, select(2, UnitClass("player")), UnitSex("player"), goal, safety), (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
         end
         farkle.CreateOfferTimer()
     elseif prefix:startswith("cancel_offer") then
@@ -48,7 +48,7 @@ function C_Farkle.SendAddonMessage(prefix)
         if not UnitInParty(realm == GetNormalizedRealmName() and name or unit) then
             C_ChatInfo.SendAddonMessage("Farkle", "cancel_offer", "WHISPER", realm == GetNormalizedRealmName() and name or unit)
         elseif UnitInParty(realm == GetNormalizedRealmName() and name or unit) then
-            C_ChatInfo.SendAddonMessage("Farkle", format("cancel_offer:%s", unit), IsInInstance() and "INSTANCE_CHAT" or "RAID")
+            C_ChatInfo.SendAddonMessage("Farkle", format("cancel_offer:%s", unit), (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
         end
         farkle.CancelOfferTimer()
     elseif prefix:startswith("accepted") then
@@ -57,7 +57,7 @@ function C_Farkle.SendAddonMessage(prefix)
         if not UnitInParty(realm == GetNormalizedRealmName() and name or unit) then
             C_ChatInfo.SendAddonMessage("Farkle", format("accepted:%s:%s:%s:%s", select(2, UnitClass("player")), UnitSex("player"), goal, safety), "WHISPER", realm == GetNormalizedRealmName() and name or unit)
         elseif UnitInParty(realm == GetNormalizedRealmName() and name or unit) then
-            C_ChatInfo.SendAddonMessage("Farkle", format("accepted:%s-%s:%s:%s:%s:%s", name, realm, select(2, UnitClass("player")), UnitSex("player"), goal, safety), IsInInstance() and "INSTANCE_CHAT" or "RAID")
+            C_ChatInfo.SendAddonMessage("Farkle", format("accepted:%s-%s:%s:%s:%s:%s", name, realm, select(2, UnitClass("player")), UnitSex("player"), goal, safety), (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
         end
     elseif prefix:startswith("declined") then
         local _, unit = strsplit(":", prefix, 2)
@@ -65,7 +65,7 @@ function C_Farkle.SendAddonMessage(prefix)
         if not UnitInParty(realm == GetNormalizedRealmName() and name or unit) then
             C_ChatInfo.SendAddonMessage("Farkle", format("declined:%s", UnitSex("player")), "WHISPER", realm == GetNormalizedRealmName() and name or unit)
         elseif UnitInParty(realm == GetNormalizedRealmName() and name or unit) then
-            C_ChatInfo.SendAddonMessage("Farkle", format("declined:%s-%s:%s", name, realm, UnitSex("player")), IsInInstance() and "INSTANCE_CHAT" or "RAID")
+            C_ChatInfo.SendAddonMessage("Farkle", format("declined:%s-%s:%s", name, realm, UnitSex("player")), (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
         end
     elseif prefix:startswith("playing") then
         local _, unit = strsplit(":", prefix, 2)
@@ -73,7 +73,7 @@ function C_Farkle.SendAddonMessage(prefix)
         if not UnitInParty(realm == GetNormalizedRealmName() and name or unit) then
             C_ChatInfo.SendAddonMessage("Farkle", "playing:%s", "WHISPER", realm == GetNormalizedRealmName() and name or unit)
         elseif UnitInParty(realm == GetNormalizedRealmName() and name or unit) then
-            C_ChatInfo.SendAddonMessage("Farkle", format("playing:%s", unit), IsInInstance() and "INSTANCE_CHAT" or "RAID")
+            C_ChatInfo.SendAddonMessage("Farkle", format("playing:%s", unit), (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
         end
     elseif prefix:startswith("status") then
         local _, unit = strsplit(":", prefix, 2)
@@ -81,7 +81,7 @@ function C_Farkle.SendAddonMessage(prefix)
         if not UnitInParty(realm == GetNormalizedRealmName() and name or unit) then
             C_ChatInfo.SendAddonMessage("Farkle", format("status:%s", StaticPopup_Visible("FARKLE_PLAY_OFFER") and "isActive" or "isSent"), "WHISPER", realm == GetNormalizedRealmName() and name or unit)
         elseif UnitInParty(realm == GetNormalizedRealmName() and name or unit) then
-            C_ChatInfo.SendAddonMessage("Farkle", format("status:%s:%s", unit, StaticPopup_Visible("FARKLE_PLAY_OFFER") and "isActive" or "isSent"), IsInInstance() and "INSTANCE_CHAT" or "RAID")
+            C_ChatInfo.SendAddonMessage("Farkle", format("status:%s:%s", unit, StaticPopup_Visible("FARKLE_PLAY_OFFER") and "isActive" or "isSent"), (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
         end
     end
     if C_Farkle.HasOpponent() and C_Farkle.IsPvP() then
@@ -89,55 +89,55 @@ function C_Farkle.SendAddonMessage(prefix)
             if not UnitInParty(farkle.opponent.unit) then
                 C_ChatInfo.SendAddonMessage("Farkle", "ready:yes", "WHISPER", farkle.opponent.unit)
             elseif UnitInParty(farkle.opponent.unit) then
-                C_ChatInfo.SendAddonMessage("Farkle", "ready:yes", IsInInstance() and "INSTANCE_CHAT" or "RAID")
+                C_ChatInfo.SendAddonMessage("Farkle", "ready:yes", (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
             end
         elseif prefix == "quit" then
             if not UnitInParty(farkle.opponent.unit) then
                 C_ChatInfo.SendAddonMessage("Farkle", "quit", "WHISPER", farkle.opponent.unit)
             elseif UnitInParty(farkle.opponent.unit) then
-                C_ChatInfo.SendAddonMessage("Farkle", "quit", IsInInstance() and "INSTANCE_CHAT" or "RAID")
+                C_ChatInfo.SendAddonMessage("Farkle", "quit", (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
             end
         elseif prefix:startswith('coin') then
             local _, coinResult = strsplit(":", prefix, 2)
             if not UnitInParty(farkle.opponent.unit) then
                 C_ChatInfo.SendAddonMessage("Farkle", format("coin:%s", coinResult), "WHISPER", farkle.opponent.unit)
             elseif UnitInParty(farkle.opponent.unit) then
-                C_ChatInfo.SendAddonMessage("Farkle", format("coin:%s", coinResult), IsInInstance() and "INSTANCE_CHAT" or "RAID")
+                C_ChatInfo.SendAddonMessage("Farkle", format("coin:%s", coinResult), (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
             end
         elseif prefix == "lose" then
             if not UnitInParty(farkle.opponent.unit) then
                 C_ChatInfo.SendAddonMessage("Farkle", "lose", "WHISPER", farkle.opponent.unit)
             elseif UnitInParty(farkle.opponent.unit) then
-                C_ChatInfo.SendAddonMessage("Farkle", "lose", IsInInstance() and "INSTANCE_CHAT" or "RAID")
+                C_ChatInfo.SendAddonMessage("Farkle", "lose", (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
             end
         elseif prefix == "won" then
             if not UnitInParty(farkle.opponent.unit) then
                 C_ChatInfo.SendAddonMessage("Farkle", "won", "WHISPER", farkle.opponent.unit)
             elseif UnitInParty(farkle.opponent.unit) then
-                C_ChatInfo.SendAddonMessage("Farkle", "won", IsInInstance() and "INSTANCE_CHAT" or "RAID")
+                C_ChatInfo.SendAddonMessage("Farkle", "won", (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
             end
         elseif prefix == "combat" then
             if not UnitInParty(farkle.opponent.unit) then
                 C_ChatInfo.SendAddonMessage("Farkle", "combat", "WHISPER", farkle.opponent.unit)
             elseif UnitInParty(farkle.opponent.unit) then
-                C_ChatInfo.SendAddonMessage("Farkle", "combat", IsInInstance() and "INSTANCE_CHAT" or "RAID")
+                C_ChatInfo.SendAddonMessage("Farkle", "combat", (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
             end
         elseif prefix == "modified_code" then
             if UnitInParty(farkle.opponent.unit) then
-                C_ChatInfo.SendAddonMessage("Farkle", "modified_code", IsInInstance() and "INSTANCE_CHAT" or "RAID")
+                C_ChatInfo.SendAddonMessage("Farkle", "modified_code", (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
             end
         elseif prefix == "surrender" then
             if not UnitInParty(farkle.opponent.unit) then
                 C_ChatInfo.SendAddonMessage("Farkle", "surrender", "WHISPER", farkle.opponent.unit)
             elseif UnitInParty(farkle.opponent.unit) then
-                C_ChatInfo.SendAddonMessage("Farkle", "surrender", IsInInstance() and "INSTANCE_CHAT" or "RAID")
+                C_ChatInfo.SendAddonMessage("Farkle", "surrender", (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
             end
         elseif prefix:startswith('score') then
             local _, total, round, hold = strsplit(":", prefix, 4)
             if not UnitInParty(farkle.opponent.unit) then
                 C_ChatInfo.SendAddonMessage("Farkle", format("score:%s:%s:%s", total, round, hold), "WHISPER", farkle.opponent.unit)
             elseif UnitInParty(farkle.opponent.unit) then
-                C_ChatInfo.SendAddonMessage("Farkle", format("score:%s:%s:%s", total, round, hold), IsInInstance() and "INSTANCE_CHAT" or "RAID")
+                C_ChatInfo.SendAddonMessage("Farkle", format("score:%s:%s:%s", total, round, hold), (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
             end
         elseif prefix:startswith('roll') then
             local _, delay, roll, dices = strsplit(":", prefix, 4)
@@ -149,9 +149,9 @@ function C_Farkle.SendAddonMessage(prefix)
                 end
             elseif UnitInParty(farkle.opponent.unit) then
                 if not C_Farkle.GetBoardInfo("safety") then
-                    C_ChatInfo.SendAddonMessage("Farkle", format("roll:%s:%s:%s", delay, roll, dices), IsInInstance() and "INSTANCE_CHAT" or "RAID")
+                    C_ChatInfo.SendAddonMessage("Farkle", format("roll:%s:%s:%s", delay, roll, dices), (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
                 else
-                    C_ChatInfo.SendAddonMessage("Farkle", format("roll:%s:%s", delay, roll), IsInInstance() and "INSTANCE_CHAT" or "RAID")
+                    C_ChatInfo.SendAddonMessage("Farkle", format("roll:%s:%s", delay, roll), (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
                 end
             end
         elseif prefix:startswith('hold') then
@@ -159,19 +159,19 @@ function C_Farkle.SendAddonMessage(prefix)
             if not UnitInParty(farkle.opponent.unit) then
                 C_ChatInfo.SendAddonMessage("Farkle", format("hold:%s:%s", delay, diceHoldStrings), "WHISPER", farkle.opponent.unit)
             elseif UnitInParty(farkle.opponent.unit) then
-                C_ChatInfo.SendAddonMessage("Farkle", format("hold:%s:%s", delay, diceHoldStrings), IsInInstance() and "INSTANCE_CHAT" or "RAID")
+                C_ChatInfo.SendAddonMessage("Farkle", format("hold:%s:%s", delay, diceHoldStrings), (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
             end
         elseif prefix == 'online-check' then
             if not UnitInParty(farkle.opponent.unit) then
                 C_ChatInfo.SendAddonMessage("Farkle", "online-check", "WHISPER", farkle.opponent.unit)
             elseif UnitInParty(farkle.opponent.unit) then
-                C_ChatInfo.SendAddonMessage("Farkle", "online-check", IsInInstance() and "INSTANCE_CHAT" or "RAID")
+                C_ChatInfo.SendAddonMessage("Farkle", "online-check", (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
             end
         elseif prefix == 'online-confirm' then
             if not UnitInParty(farkle.opponent.unit) then
                 C_ChatInfo.SendAddonMessage("Farkle", "online-confirm", "WHISPER", farkle.opponent.unit)
             elseif UnitInParty(farkle.opponent.unit) then
-                C_ChatInfo.SendAddonMessage("Farkle", "online-confirm", IsInInstance() and "INSTANCE_CHAT" or "RAID")
+                C_ChatInfo.SendAddonMessage("Farkle", "online-confirm", (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
             end
         end
     end
@@ -279,10 +279,7 @@ EventRegistry:RegisterFrameEventAndCallback("CHAT_MSG_ADDON", function(_, prefix
                     end
                     C_Farkle:ExitGame()
                 elseif text:startswith('coin') then
-                    _, text = strsplit(":", text, 2)
-                    text = tonumber(text)
-                    if text == 1 then text = 2 else text = 1 end
-                    C_Farkle.CoinFlip(text)
+                    C_Farkle.CoinFlip(select(2, strsplit(":", text, 2)) == "1" and 2 or 1)
                 elseif C_Farkle.IsPlaying() and text:startswith('lose') then
                     C_Farkle.Defeat("lose")
                 elseif C_Farkle.IsPlaying() and text:startswith('won') then
@@ -357,7 +354,7 @@ EventRegistry:RegisterFrameEventAndCallback("CHAT_MSG_ADDON", function(_, prefix
             if text:startswith('checkup') then
                 local _, target = strsplit(":", text, 2)
                 if target == format("%s-%s", UnitName("player"), GetNormalizedRealmName()) then
-                    C_ChatInfo.SendAddonMessage("Farkle", "playable", IsInInstance() and "INSTANCE_CHAT" or "RAID")
+                    C_ChatInfo.SendAddonMessage("Farkle", "playable", (IsInInstance() and IsInGroup(2)) and "INSTANCE_CHAT" or "RAID")
                 end
                 if not farkle.players[sender] then
                     farkle.players[sender] = true
@@ -464,10 +461,7 @@ EventRegistry:RegisterFrameEventAndCallback("CHAT_MSG_ADDON", function(_, prefix
                     end
                     C_Farkle:ExitGame()
                 elseif text:startswith('coin') then
-                    _, text = strsplit(":", text, 2)
-                    text = tonumber(text)
-                    if text == 1 then text = 2 else text = 1 end
-                    C_Farkle.CoinFlip(text)
+                    C_Farkle.CoinFlip(select(2, strsplit(":", text, 2)) == "1" and 2 or 1)
                 elseif C_Farkle.IsPlaying() and text:startswith('lose') then
                     C_Farkle.Defeat("lose")
                 elseif C_Farkle.IsPlaying() and text:startswith('won') then
