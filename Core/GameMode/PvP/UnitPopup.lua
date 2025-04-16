@@ -14,9 +14,10 @@ end
 
 EventRegistry:RegisterFrameEventAndCallback("PLAYER_TARGET_CHANGED", function(ownerID, ...)
     if UnitExists("target") and (UnitIsPlayer("target") and UnitName("target") ~= UnitName("player")) then
-        local name, realm = GetUnitName("target", true) or GetUnitName("target", true), GetNormalizedRealmName()
+        local name, realm = strsplit("-", GetUnitName("target", true), 2)
+        if not realm then realm = GetNormalizedRealmName() end
         if not C_Farkle.UnitCanPlay(format("%s-%s", name, realm)) then
-            C_Farkle.SendAddonMessage(format("checkup:%s", name, realm))
+            C_Farkle.SendAddonMessage(format("checkup:%s-%s", name, realm))
         end
     end
 end)
