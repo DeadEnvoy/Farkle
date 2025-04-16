@@ -131,14 +131,14 @@
             </Frame>
 
             <Frame parentKey="Coin" parent="FarkleBoard" hidden="true">
-                <Size x="125" y="125"/>
+                <Size x="128" y="128"/>
                 <Anchors>
                     <Anchor point="CENTER" x="0" y="0"/>
                 </Anchors>
                 <Layers>
                     <Layer level="BACKGROUND">
                         <Texture parentKey="Texture" file="Interface\AddOns\Farkle\Media\coin_1">
-                            <Size x="125" y="125"/>
+                            <Size x="128" y="128"/>
                             <Anchors>
                                 <Anchor point="CENTER"/>
                             </Anchors>
