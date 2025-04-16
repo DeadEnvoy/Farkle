@@ -107,9 +107,13 @@ local function DisplayDifficultyOptions(duiFrame)
 
             local gossipData = { name = buttonText, icon = data.icon }
             difficultyButton:SetGossip(gossipData, nil)
-            difficultyButton.onClickFunc = function(self) emulateClick(self, data.handler); return true end
+            difficultyButton.onClickFunc = function(self)
+                emulateClick(self, data.handler); self:Disable()
+                return true
+            end
 
             difficultyButton:SetScript("OnKeyDown", function(self, button)
+                if not self:IsEnabled() then return end
                 if button == hotkeyString and not UnitAffectingCombat("player") then
                     self:SetPropagateKeyboardInput(false); self:Click()
                 elseif button == hotkeyString then
@@ -229,9 +233,13 @@ local function HookedHandleGossip(duiFrame, ...)
                 local diceGossipData = { name = buttonText, icon = "Interface/Buttons/UI-GroupLoot-Dice-Up" }
                 diceButton:SetGossip(diceGossipData, nil)
                 diceButton.type = "gossip"
-                diceButton.onClickFunc = function(self) emulateClick(self, PlayDiceOnClick); return true end
+                diceButton.onClickFunc = function(self)
+                    emulateClick(self, PlayDiceOnClick); self:Disable()
+                    return true
+                end
 
                 diceButton:SetScript("OnKeyDown", function(self, button)
+                    if not self:IsEnabled() then return end
                     if button == hotkeyString and not UnitAffectingCombat("player") then
                         self:SetPropagateKeyboardInput(false); self:Click()
                     elseif button == hotkeyString then
