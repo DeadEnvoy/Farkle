@@ -1,8 +1,9 @@
 local addonName, farkle = ...
 
 local L = farkle.L
+local C_Farkle = farkle.API
 
-farkle.players = { }
+farkle.players = {}
 
 local function GetTextureString(texturePath, width, height, cropX, cropY, left, right, top, bottom)
     local textureString = string.format("|T%s:%d:%d:%d:%d:256:256:%d:%d:%d:%d|t",
@@ -12,8 +13,11 @@ local function GetTextureString(texturePath, width, height, cropX, cropY, left, 
 end
 
 EventRegistry:RegisterFrameEventAndCallback("PLAYER_TARGET_CHANGED", function(ownerID, ...)
-    if UnitExists("target") and UnitIsPlayer("target") and not C_Farkle.UnitCanPlay("target") then
-        C_Farkle.SendAddonMessage("checkup")
+    if UnitExists("target") and (UnitIsPlayer("target") and UnitName("target") ~= UnitName("player")) then
+        local name, realm = GetUnitName("target", true) or GetUnitName("target", true), GetNormalizedRealmName()
+        if not C_Farkle.UnitCanPlay(format("%s-%s", name, realm)) then
+            C_Farkle.SendAddonMessage(format("checkup:%s", name, realm))
+        end
     end
 end)
 
@@ -63,44 +67,48 @@ local function createButtons(rootDescription, contextData)
         ---@diagnostic disable-next-line: missing-parameter
         local index, submenu = findButton(rootDescription), MenuUtil.CreateButton(L["OFFER_MENU"])
         submenu:SetEnabled(false); rootDescription:Insert(submenu, index + 1)
-        submenu:CreateTitle(L["GAME_DURATION"])
 
-        if not UnitAffectingCombat(contextData.unit) and not UnitAffectingCombat(contextData.unit) then
-            if C_Farkle.UnitCanPlay(contextData.unit) and not C_Farkle.HasOpponent() then
-                submenu:SetEnabled(true)
-            elseif C_Farkle.UnitCanPlay(contextData.unit) and C_Farkle.HasOpponent() then
-                submenu:SetEnabled(false)
-                submenu:SetTooltip(function(tooltip, elementDescription)
-                    GameTooltip_SetTitle(tooltip, MenuUtil.GetElementText(elementDescription));
-                    GameTooltip_AddErrorLine(tooltip, L["IN_GAME"]);
-                end)
-            elseif UnitIsSameServer(contextData.unit) and not C_Farkle.UnitCanPlay(contextData.unit) then
-                submenu:SetEnabled(false)
-                submenu:SetTooltip(function(tooltip, elementDescription)
-                    GameTooltip_SetTitle(tooltip, MenuUtil.GetElementText(elementDescription));
-                    GameTooltip_AddErrorLine(tooltip, L["NO_ADDON"]);
-                end)
-            else
-                submenu:SetEnabled(false)
-                submenu:SetTooltip(function(tooltip, elementDescription)
-                    GameTooltip_SetTitle(tooltip, MenuUtil.GetElementText(elementDescription));
-                    GameTooltip_AddErrorLine(tooltip, L["NO_ADDON"]);
-                end)
-            end
-        else
-            submenu:SetEnabled(false)
-            if UnitAffectingCombat("player") then
-                submenu:SetTooltip(function(tooltip, elementDescription)
-                    GameTooltip_SetTitle(tooltip, MenuUtil.GetElementText(elementDescription));
-                    GameTooltip_AddErrorLine(tooltip, L["PLAYER_IN_COMBAT"]);
-                end)
-            elseif UnitAffectingCombat(contextData.unit) then
-                submenu:SetTooltip(function(tooltip, elementDescription)
-                    GameTooltip_SetTitle(tooltip, MenuUtil.GetElementText(elementDescription));
-                    GameTooltip_AddErrorLine(tooltip, L["UNIT_IN_COMBAT"]);
-                end)
-            end
+        if not C_Farkle.UnitCanPlay(format("%s-%s", contextData.name, contextData.server or GetNormalizedRealmName())) then
+            C_Farkle.SendAddonMessage(format("checkup:%s-%s", contextData.name, contextData.server or GetNormalizedRealmName()))
         end
+
+        if not CheckInteractDistance(contextData.unit, 3) then
+            return
+        end
+
+        if farkle.status["offer"].isSent or StaticPopup_Visible("FARKLE_PLAY_OFFER") then
+            submenu:SetTooltip(function(tooltip, elementDescription)
+                GameTooltip_SetTitle(tooltip, MenuUtil.GetElementText(elementDescription));
+                GameTooltip_AddErrorLine(tooltip, farkle.status["offer"].isSent and L["OFFER_ALREADY_SENT"] or L["CANNOT_SEND_OFFER"]);
+            end)
+            return
+        elseif C_Farkle.HasOpponent() then
+            submenu:SetTooltip(function(tooltip, elementDescription)
+                GameTooltip_SetTitle(tooltip, MenuUtil.GetElementText(elementDescription));
+                GameTooltip_AddErrorLine(tooltip, L["IN_GAME"]);
+            end)
+            return
+        end
+
+        if not UnitAffectingCombat("player") and not UnitAffectingCombat(contextData.unit) then
+            if C_Farkle.UnitCanPlay(format("%s-%s", contextData.name, contextData.server or GetNormalizedRealmName())) then
+                submenu:SetEnabled(true)
+            else
+                submenu:SetTooltip(function(tooltip, elementDescription)
+                    GameTooltip_SetTitle(tooltip, MenuUtil.GetElementText(elementDescription));
+                    GameTooltip_AddErrorLine(tooltip, L["NO_ADDON"]);
+                end)
+                return
+            end
+        elseif UnitAffectingCombat("player") or UnitAffectingCombat(contextData.unit) then
+            submenu:SetTooltip(function(tooltip, elementDescription)
+                GameTooltip_SetTitle(tooltip, MenuUtil.GetElementText(elementDescription));
+                GameTooltip_AddErrorLine(tooltip, UnitAffectingCombat("player") and L["PLAYER_IN_COMBAT"] or L["UNIT_IN_COMBAT"]);
+            end)
+            return
+        end
+
+        submenu:CreateTitle(L["GAME_DURATION"])
 
         local safetyMode = false
 
@@ -110,16 +118,11 @@ local function createButtons(rootDescription, contextData)
             L["DURATION_1"],
             format("%s: %d-%s", L["AVERAGE_DURATION"], 1, format(MINUTES_ABBR, 2)),
             function()
-                if not safetyMode then
-                    C_Farkle.SendAddonMessage("offer:2000:false");
-                else
-                    if UnitInParty(contextData.unit) then
-                        C_Farkle.SendAddonMessage("offer:2000:true")
-                    else
-                        C_Farkle.SendAddonMessage("offer:2000:false")
-                    end
-                end
-                DEFAULT_CHAT_FRAME:AddMessage(DICE_ICON .. " " .. L["OFFER_SENT"], 1.000, 1.000, 0.000)
+                C_Farkle.SendAddonMessage(format(
+                    "offer:%s-%s:%s:%s", contextData.name, contextData.server or GetNormalizedRealmName(), 2000,
+                    (UnitInParty(contextData.unit) and GetNumGroupMembers() == 2) and tostring(safetyMode) or "false"));
+                farkle.status["offer"].isSent = format("%s-%s", contextData.name, contextData.server or GetNormalizedRealmName());
+                DEFAULT_CHAT_FRAME:AddMessage(CHAT_DICE_ICON .. " " .. L["OFFER_SENT"], 1.000, 1.000, 0.000);
                 return MenuResponse.CloseAll
             end,
             "challenges-medal-small-bronze",
@@ -132,16 +135,11 @@ local function createButtons(rootDescription, contextData)
             L["DURATION_2"],
             format("%s: %d-%s", L["AVERAGE_DURATION"], 3, format(MINUTES_ABBR, 4)),
             function()
-                if not safetyMode then
-                    C_Farkle.SendAddonMessage("offer:4000:false");
-                else
-                    if UnitInParty(contextData.unit) then
-                        C_Farkle.SendAddonMessage("offer:4000:true")
-                    else
-                        C_Farkle.SendAddonMessage("offer:4000:false")
-                    end
-                end
-                DEFAULT_CHAT_FRAME:AddMessage(DICE_ICON .. " " .. L["OFFER_SENT"], 1.000, 1.000, 0.000)
+                C_Farkle.SendAddonMessage(format(
+                    "offer:%s-%s:%s:%s", contextData.name, contextData.server or GetNormalizedRealmName(), 4000,
+                    (UnitInParty(contextData.unit) and GetNumGroupMembers() == 2) and tostring(safetyMode) or "false"));
+                farkle.status["offer"].isSent = format("%s-%s", contextData.name, contextData.server or GetNormalizedRealmName());
+                DEFAULT_CHAT_FRAME:AddMessage(CHAT_DICE_ICON .. " " .. L["OFFER_SENT"], 1.000, 1.000, 0.000);
                 return MenuResponse.CloseAll
             end,
             "challenges-medal-small-silver",
@@ -154,16 +152,11 @@ local function createButtons(rootDescription, contextData)
             L["DURATION_3"],
             format("%s: %d-%s", L["AVERAGE_DURATION"], 7, format(MINUTES_ABBR, 8)),
             function()
-                if not safetyMode then
-                    C_Farkle.SendAddonMessage("offer:8000:false")
-                else
-                    if UnitInParty(contextData.unit) then
-                        C_Farkle.SendAddonMessage("offer:8000:true")
-                    else
-                        C_Farkle.SendAddonMessage("offer:8000:false")
-                    end
-                end
-                DEFAULT_CHAT_FRAME:AddMessage(DICE_ICON .. " " .. L["OFFER_SENT"], 1.000, 1.000, 0.000)
+                C_Farkle.SendAddonMessage(format(
+                    "offer:%s-%s:%s:%s", contextData.name, contextData.server or GetNormalizedRealmName(), 8000,
+                    (UnitInParty(contextData.unit) and GetNumGroupMembers() == 2) and tostring(safetyMode) or "false"));
+                farkle.status["offer"].isSent = format("%s-%s", contextData.name, contextData.server or GetNormalizedRealmName());
+                DEFAULT_CHAT_FRAME:AddMessage(CHAT_DICE_ICON .. " " .. L["OFFER_SENT"], 1.000, 1.000, 0.000);
                 return MenuResponse.CloseAll
             end,
             "challenges-medal-small-gold",
