@@ -1,5 +1,8 @@
 local _, farkle = ...
 
+local C_Farkle = farkle.API
+local S_Timer = farkle.API
+
 local function isDiceSelected(selectedDices, diceIndex)
     for _, selected in ipairs(selectedDices) do
         if selected == diceIndex then
@@ -74,10 +77,8 @@ local function calculateRiskChance(opponentScore)
     end
 
     if math.random(100) <= riskChance then
-        -- print("[!] ИИ рискует:  " .. riskChance .. "% (Стадия: " .. getStage("player") .. ")")
         return true
     else
-        -- print("Шанс риска ИИ: " .. riskChance .. "% (Стадия: " .. getStage("player") .. ")")
         return false
     end
 end
@@ -365,11 +366,7 @@ function C_Farkle.AISelectDice(dices)
                     C_Farkle:SetOpponentInfo("rolls", 0)
                     C_Farkle:SetScore("opponent", farkle.opponent.total + farkle.opponent.round + farkle.opponent.hold, 0, 0)
                     S_Timer.After(0.8, function()
-                        C_Farkle:ClearBoard()
-                        C_Farkle:SwitchPlayerTurn()
-                        S_Timer.After(1.5, function()
-                            C_Farkle.RollDice("math", 6)
-                        end)
+                        C_Farkle:ClearBoard(); C_Farkle:SwitchPlayerTurn()
                     end)
                 end
             end
@@ -385,11 +382,7 @@ function C_Farkle.AISelectDice(dices)
                     C_Farkle:SetOpponentInfo("rolls", 0)
                     C_Farkle:SetScore("opponent", farkle.opponent.total + farkle.opponent.round + farkle.opponent.hold, 0, 0)
                     S_Timer.After(0.8, function()
-                        C_Farkle:ClearBoard()
-                        C_Farkle:SwitchPlayerTurn()
-                        S_Timer.After(1.5, function()
-                            C_Farkle.RollDice("math", 6)
-                        end)
+                        C_Farkle:ClearBoard(); C_Farkle:SwitchPlayerTurn()
                     end)
                 end
             end
