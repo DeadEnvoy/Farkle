@@ -1,6 +1,7 @@
 local _, farkle = ...
 
 local L = farkle.L
+local C_Farkle = farkle.API
 
 ---@diagnostic disable-next-line: duplicate-set-field
 C_GossipInfo.ForceGossip = function()
@@ -114,10 +115,9 @@ EventRegistry:RegisterFrameEventAndCallback("GOSSIP_SHOW", function(ownerID, ...
                             C_Timer.After(0.250, function()
                                 if GossipFrame:IsShown() and (name and sex) and GossipFrame.CurrentStage ~= 0 then
                                     C_Farkle:NewBoard(name:gsub("Innkeeper ", ""), "none", nil, sex, "PvE", 2000, false)
-                                    if C_CVar.GetCVarBool("Sound_EnableDialog") then
-                                        C_CVar.SetCVar("Sound_EnableDialog", 0)
-                                        C_GossipInfo.CloseGossip()
-                                        C_CVar.SetCVar("Sound_EnableDialog", 1)
+                                    if C_CVar.GetCVarBool("Sound_EnableDialog") and not UnitAffectingCombat("player") then
+                                        C_CVar.SetCVar("Sound_EnableSFX", 0); C_CVar.SetCVar("Sound_EnableDialog", 0); C_GossipInfo.CloseGossip();
+                                        C_CVar.SetCVar("Sound_EnableDialog", 1); C_CVar.SetCVar("Sound_EnableSFX", 1); 
                                     else
                                         C_GossipInfo.CloseGossip()
                                     end
