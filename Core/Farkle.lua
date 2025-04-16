@@ -2,6 +2,8 @@ local _, farkle = ...
 
 local L = farkle.L
 local C_Farkle = farkle.API
+local S_Timer = farkle.API
+local S_Sound = farkle.API
 
 string.startswith = function(self, str)
     ---@diagnostic disable-next-line: param-type-mismatch
@@ -81,14 +83,17 @@ function C_Farkle:CreateTimer()
                     C_Farkle.CheckOnline()
                 end
             elseif count == -1 then
-                C_Farkle:CancelTimer(); C_Farkle:AddWarningMessage("CENTER", L["TIME_OVER"], 2.5); C_Farkle:ClearBoard()
+                C_Farkle:CancelTimer(); C_Farkle:ClearBoard()
+                C_Farkle:AddWarningMessage("CENTER", L["TIME_OVER"], 2.5)
                 if C_Farkle.IsPlayerTurn() then
-                    C_Farkle:SetScore("player", farkle.player.total, 0, 0); farkle.player.selected = 0
+                    C_Farkle:SetScore("player", farkle.player.total, 0, 0)
                     FarkleBoard.Input_Key_Q:Hide(); FarkleBoard.Input_Key_E:Hide()
-                    S_Timer.After(2.5, function()
-                        C_Farkle:SwitchPlayerTurn(); C_Farkle.CheckOnline()
-                    end)
+                else
+                    C_Farkle:SetScore("opponent", farkle.opponent.total, 0, 0)
                 end
+                S_Timer.After(2.5, function()
+                    C_Farkle:SwitchPlayerTurn()
+                end)
             end
         end)
     end
@@ -103,7 +108,7 @@ function C_Farkle:CancelTimer()
 end
 
 function C_Farkle:NewBoard(name, realm, class, sex, mode, total, safety)
-    UIFrameFadeIn(FarkleBoard, 0.100, 0, 1);
+    UIFrameFadeIn(FarkleBoard, 0.100, 0, 1); PlaySound(176681)
     FarkleBoard.Logo:Show(); C_Farkle:ClearBoard();
     C_Timer.After(0.100, function() FarkleBoard:Show() end)
     C_Farkle:SetBoardInfo("total", total); C_Farkle:SetBoardInfo("safety", safety)
@@ -158,17 +163,20 @@ end
 function C_Farkle:StartGame()
     if C_Farkle.IsPlayerTurn() then
         FarkleBoard.Input_Key_Q:Show(); FarkleBoard.Input_Key_E:Show(); FarkleBoard.Input_Key_ESC:Show(); FarkleBoard.Input_Key_T:Show()
-        C_Farkle:DisableButton(FarkleBoard.Input_Key_Q); C_Farkle:DisableButton(FarkleBoard.Input_Key_E);
-        FarkleBoard.PlayerBoard:SetAlpha(1); FarkleBoard.OpponentBoard:SetAlpha(0.50);
-        S_Timer.After(0.25, function() C_Farkle.RollDice(C_Farkle.GetBoardInfo("roll"), 6) end)
+        C_Farkle:DisableButton(FarkleBoard.Input_Key_Q); C_Farkle:DisableButton(FarkleBoard.Input_Key_E)
+        FarkleBoard.PlayerBoard:SetAlpha(1); FarkleBoard.OpponentBoard:SetAlpha(0.50)
+        C_Timer.After(0.25, function()
+            C_Farkle.RollDice(C_Farkle.GetBoardInfo("roll"), 6)
+        end)
     else
-        FarkleBoard.PlayerBoard:SetAlpha(0.50); FarkleBoard.OpponentBoard:SetAlpha(1);
-        FarkleBoard.Input_Key_ESC:Show(); FarkleBoard.Input_Key_T:Show(); if C_Farkle.IsPvE() then
-            S_Timer.After(0.25, function() C_Farkle.RollDice(C_Farkle.GetBoardInfo("roll"), 6) end)
+        FarkleBoard.PlayerBoard:SetAlpha(0.50); FarkleBoard.OpponentBoard:SetAlpha(1)
+        FarkleBoard.Input_Key_ESC:Show(); FarkleBoard.Input_Key_T:Show()
+        if C_Farkle.IsPvE() then
+            C_Timer.After(0.25, function()
+                C_Farkle.RollDice(C_Farkle.GetBoardInfo("roll"), 6)
+            end)
         end
     end
-
-    C_Farkle.CheckOnline()
 
     farkle.player.ready = false; farkle.opponent.ready = false
 
@@ -196,8 +204,8 @@ function C_Farkle.Victory(type)
 
     if type == "offline" then
         toastInfo.displayType = Enum.EventToastDisplayType.NormalBlockText
-        toastInfo.title = LIGHTGRAY_FONT_COLOR:GenerateHexColorMarkup() .. L["OPPONENT_OFFLINE"]
-        toastInfo.colorTint = {r = 0.8, g = 0.8, b = 0.8}; toastInfo.desaturated = true
+        toastInfo.title = RED_FONT_COLOR:GenerateHexColorMarkup() .. L["OPPONENT_OFFLINE"]
+        toastInfo.colorTint = {r = 1, g = 0.125, b = 0.125}
     elseif type == "gave_up" then
         if GetLocale() == "ruRU" then
             if C_Farkle.GetOpponentInfo("sex") == 1 or C_Farkle.GetOpponentInfo("sex") == 2 then
@@ -220,12 +228,19 @@ function C_Farkle.Victory(type)
         end
     end
 
-    StaticPopup_Hide("GIVE_UP_POPUP"); C_Farkle:ExitGame()
+    if StaticPopup_Visible("GIVE_UP_POPUP") then
+        StaticPopup_Hide("GIVE_UP_POPUP"); StaticPopupDialogs["GIVE_UP_POPUP"].OnCancel()
+    end
+
+    C_Farkle:ExitGame()
 
     if type == "gave_up" or type == "won" then
         PlayMusic("Interface\\AddOns\\Farkle\\Media\\Audio\\silent_5.mp3")
         S_Sound.Play("Interface\\AddOns\\Farkle\\Media\\Audio\\resultVictory.mp3", "Master")
-        C_Timer.After(5, function() S_Sound.StopAll() end)
+        C_Timer.After(5, function() 
+            S_Sound.Stop("Interface\\AddOns\\Farkle\\Media\\Audio\\resultVictory.mp3")
+            if C_Farkle.GetBoardInfo("stage") ~= "coin-flip" then StopMusic() end
+        end)
     end
 
     if not EventToastManagerFrame:IsCurrentlyToasting() then
@@ -257,11 +272,18 @@ function C_Farkle.Defeat(type)
         toastInfo.title = RED_FONT_COLOR:GenerateHexColorMarkup() .. L["YOU_LOSE"]
     end
 
-    StaticPopup_Hide("GIVE_UP_POPUP"); C_Farkle:ExitGame()
+    if StaticPopup_Visible("GIVE_UP_POPUP") then
+        StaticPopup_Hide("GIVE_UP_POPUP"); StaticPopupDialogs["GIVE_UP_POPUP"].OnCancel()
+    end
+
+    C_Farkle:ExitGame()
 
     PlayMusic("Interface\\AddOns\\Farkle\\Media\\Audio\\silent_5.mp3")
     S_Sound.Play("Interface\\AddOns\\Farkle\\Media\\Audio\\resultDefeat.mp3", "Master")
-    C_Timer.After(5, function() S_Sound.StopAll() end)
+    C_Timer.After(5, function()
+        S_Sound.Stop("Interface\\AddOns\\Farkle\\Media\\Audio\\resultDefeat.mp3")
+        if C_Farkle.GetBoardInfo("stage") ~= "coin-flip" then StopMusic() end
+    end)
 
     if not EventToastManagerFrame:IsCurrentlyToasting() then
         ---@diagnostic disable-next-line: duplicate-set-field
@@ -278,7 +300,10 @@ function C_Farkle.Defeat(type)
 end
 
 function C_Farkle.CoinFlip(coinResult)
-    StaticPopup_Hide("EXIT_GAME_POPUP"); C_Farkle:SetBoardInfo("stage", "coin-flip");
+    if StaticPopup_Visible("EXIT_GAME_POPUP") then
+        StaticPopup_Hide("EXIT_GAME_POPUP"); StaticPopupDialogs["EXIT_GAME_POPUP"].OnCancel()
+    end
+    C_Farkle:SetBoardInfo("stage", "coin-flip");
     if FarkleBoard.TutorialFrame:IsShown() then FarkleBoard.TutorialFrame:Hide() end
     if C_Farkle.IsPvP() then
         if C_Farkle.GetValue("requester") then
@@ -300,42 +325,54 @@ function C_Farkle.CoinFlip(coinResult)
         if coinResult == 1 then
             farkle.player.turn = true; farkle.opponent.turn = false; C_Farkle:AddInfoMessage("CENTER-BOTTOM", L["FIRST"], 3)
         elseif coinResult == 2 then
-            farkle.player.turn = false; farkle.opponent.turn = true; C_Farkle:AddInfoMessage("CENTER-BOTTOM", format(L["FIRST_OPPONENT"], farkle.opponent.name), 3)
+            farkle.player.turn = false; farkle.opponent.turn = true; C_Farkle:AddInfoMessage("CENTER-BOTTOM", format(L["FIRST_OPPONENT"], farkle.opponent.name), C_Farkle.IsPvE() and 3 or 3 + (select(3, GetNetStats()) / 500))
         end
         PlayMusic("Interface\\AddOns\\Farkle\\Media\\Audio\\theme.mp3")
     end)
-    S_Timer.After(5, function()
-        StaticPopup_Hide("EXIT_GAME_POPUP")
+    S_Timer.After((C_Farkle.IsPlayerTurn() or C_Farkle.IsPvE()) and 5 or 5 + (select(3, GetNetStats()) / 500), function()
+        if StaticPopup_Visible("EXIT_GAME_POPUP") then
+            StaticPopup_Hide("EXIT_GAME_POPUP"); StaticPopupDialogs["EXIT_GAME_POPUP"].OnCancel()
+        end
         UIFrameFadeIn(FarkleBoard.Coin, 0.25, 1, 0)
         S_Timer.After(0.25, function()
             FarkleBoard.Coin:Hide()
         end)
-        C_Farkle:StartGame();
+        C_Farkle:StartGame()
     end)
 end
 
 EventRegistry:RegisterFrameEventAndCallback("PLAYER_REGEN_DISABLED", function(ownerID, ...)
-    if C_Farkle.IsPlaying() then
+    if C_Farkle.HasOpponent() then
         C_Farkle.SendAddonMessage("combat"); C_Farkle:ExitGame();
-        DEFAULT_CHAT_FRAME:AddMessage(DICE_ICON .. " " .. L.COMBAT_STARTED, 1.000, 0.125, 0.125)
+        DEFAULT_CHAT_FRAME:AddMessage(CHAT_DICE_ICON .. " " .. L.COMBAT_STARTED, 1.000, 0.125, 0.125)
+    elseif StaticPopup_Visible("FARKLE_PLAY_OFFER") then
+        StaticPopup_Hide("FARKLE_PLAY_OFFER"); StaticPopupDialogs["FARKLE_PLAY_OFFER"].OnCancel()
+    elseif farkle.status["offer"].isSent then
+        C_Farkle.SendAddonMessage(format("cancel_offer:%s", farkle.status["offer"].isSent))
+    end
+end)
+
+GameMenuFrame:HookScript("OnShow", function()
+    if StaticPopup_Visible("FARKLE_PLAY_OFFER") then
+        StaticPopup_Hide("FARKLE_PLAY_OFFER"); StaticPopupDialogs["FARKLE_PLAY_OFFER"].OnCancel()
     end
 end)
 
 EventRegistry:RegisterFrameEventAndCallback("PLAYER_ENTERING_WORLD", function(ownerID, isInitialLogin, isReloadingUi)
-    if (IsInRaid() or IsInInstance()) and C_Farkle.IsPlaying() then
-        C_Farkle:ExitGame(1); DEFAULT_CHAT_FRAME:AddMessage(DICE_ICON .. " " .. L.INSTANCE, 1.000, 1.000, 0.000)
+    if (not isInitialLogin and not isReloadingUi) and IsInInstance() and C_Farkle.IsPlaying() then
+        C_Farkle:ExitGame(1); DEFAULT_CHAT_FRAME:AddMessage(CHAT_DICE_ICON .. " " .. L.INSTANCE, 1.000, 1.000, 0.000)
     end
 end)
 
 EventRegistry:RegisterFrameEventAndCallback("PLAYER_DEAD", function()
     if C_Farkle.HasOpponent() then
         C_Farkle.SendAddonMessage("combat"); C_Farkle:ExitGame();
-        DEFAULT_CHAT_FRAME:AddMessage(DICE_ICON .. " " .. L.DIED, 1.000, 0.125, 0.125)
+        DEFAULT_CHAT_FRAME:AddMessage(CHAT_DICE_ICON .. " " .. L.DIED, 1.000, 0.125, 0.125)
     end
 end)
 
 EventRegistry:RegisterFrameEventAndCallback("GROUP_ROSTER_UPDATE", function()
-    if C_Farkle.HasOpponent() and C_Farkle.GetBoardInfo("safety") then
+    if C_Farkle.HasOpponent() and (C_Farkle.GetBoardInfo("safety") and GetNumGroupMembers() ~= 2) then
         C_Farkle:ExitGame(); local toastInfo = {
             title = RED_FONT_COLOR:GenerateHexColorMarkup() .. L["GROUP_CHANGED"],
             subtitle = L["GAME_NAME"],
@@ -356,15 +393,7 @@ EventRegistry:RegisterFrameEventAndCallback("GROUP_ROSTER_UPDATE", function()
             EventToastManagerFrame.currentDisplayingToast:SetAnimInEndDelay(1.75)
             C_EventToastManager.GetNextToastToDisplay = OriginalGetNextToast
         end
-    end
-end)
-
-EventToastManagerFrame:SetScript("OnShow", function(self)
-    if EventToastManagerFrame:IsCurrentlyToasting() then
-        if EventToastManagerFrame.currentDisplayingToast.toastInfo.desaturated then
-            EventToastManagerFrame.GLine:SetDesaturated(true); EventToastManagerFrame.GLine2:SetDesaturated(true)
-        elseif EventToastManagerFrame.GLine:IsDesaturated() and EventToastManagerFrame.GLine2:IsDesaturated() then
-            EventToastManagerFrame.GLine:SetDesaturated(false); EventToastManagerFrame.GLine2:SetDesaturated(false)
-        end
+    elseif StaticPopup_Visible("FARKLE_PLAY_OFFER") and StaticPopupDialogs["FARKLE_PLAY_OFFER"].safety then
+        StaticPopup_Hide("FARKLE_PLAY_OFFER"); StaticPopupDialogs["FARKLE_PLAY_OFFER"].OnCancel()
     end
 end)
