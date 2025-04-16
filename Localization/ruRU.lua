@@ -36,8 +36,8 @@ if GetLocale() == "ruRU" then
     -- Offer and responses
     L["OFFER_MENU"] = "Сыграть в кости"
     L["OFFER_SENT"] = "Предложение было отправлено."
-    L["OFFER_ALREADY_SENT"] = "Вы уже отправили запрос."
-    L["CANNOT_SEND_OFFER"] = "Сейчас вы не можете отправить запрос."
+    L["OFFER_ALREADY_SENT"] = "Предложение уже было отправлено."
+    L["CANNOT_SEND_OFFER"] = "Сейчас вы не можете отправить предложение."
     L["OFFER_LABEL"] = "%s хочет сыграть с вами в кости."
     L["OFFER_SUBTEXT"] = "Очки: %s, Безопасный режим: %s."
     L["OFFER_DECLINED_MALE"] = "%s отказался от игры в кости."
