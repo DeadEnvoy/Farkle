@@ -1,18 +1,21 @@
 local _, farkle = ...
 
 local L = farkle.L
+local C_Farkle = farkle.API
+local S_Timer = farkle.API
+local S_Sound = farkle.API
 
 farkle.player = {
+    requester = false,
+    isPlaying = false,
+
     turn = false,
     ready = false,
-    isPlaying = false,
-    requester = false,
 
     rolls = 0,
     total = 0,
     round = 0,
     hold = 0,
-    selected = 0,
     ["dices"] = {},
     ["diceHold"] = {}
 }
@@ -155,19 +158,16 @@ local function diceRoll(roll, dices)
         farkle.board["dices"][i].circle:SetPoint("CENTER", farkle.board["dices"][i])
         farkle.board["dices"][i].circle:SetTexture("Interface\\AddOns\\Farkle\\Media\\dice_border")
         farkle.board["dices"][i].circle:SetWidth(95); farkle.board["dices"][i].circle:SetHeight(95)
-        farkle.board["dices"][i].circle:SetRotation(rotation)
-        farkle.board["dices"][i].circle:Hide()
+        farkle.board["dices"][i].circle:SetRotation(rotation); farkle.board["dices"][i].circle:Hide()
+
         if C_Farkle.IsPlayerTurn() then
+            farkle.player["diceHold"] = {}
             farkle.board["dices"][i]:SetScript("OnMouseUp", function(self, button)
                 if button == "LeftButton" then
                     if self.circle:IsShown() then
-                        self.circle:Hide()
-                        farkle.player["diceHold"][i] = nil
-                        farkle.player.selected = farkle.player.selected - 1
+                        self.circle:Hide(); farkle.player["diceHold"][i] = nil
                     else
-                        self.circle:Show()
-                        farkle.player["diceHold"][i] = dices[i]
-                        farkle.player.selected = farkle.player.selected + 1
+                        self.circle:Show(); farkle.player["diceHold"][i] = dices[i]
                     end
                     farkle.player.hold = farkle.calculateScore(farkle.player["diceHold"]);
                     FarkleBoard.PlayerBoard.HoldPlayer:SetText(farkle.player.hold)
@@ -216,35 +216,21 @@ local function diceRoll(roll, dices)
     if not hasCombination then
         C_Farkle:AddWarningMessage("CENTER", L["BUST"], 2.5)
         if C_Farkle.IsPlayerTurn() then
-            C_Farkle.CheckOnline()
+            C_Farkle:SetValue("rolls", 0)
+            C_Farkle:SetScore("player", farkle.player.total, 0, 0)
             FarkleBoard.Input_Key_Q:Hide(); FarkleBoard.Input_Key_E:Hide()
-            C_Farkle:SetScore("player", farkle.player.total, 0, 0); farkle.player.selected = 0
-            S_Timer.After(2.5, function()
-                C_Farkle:SwitchPlayerTurn()
-                if C_Farkle.IsPvE() then
-                    C_Farkle:SetValue("rolls", 0)
-                    S_Timer.After(1.5, function()
-                        C_Farkle.RollDice(C_Farkle.GetBoardInfo("roll"), 6)
-                    end)
-                end
-            end)
         else
-            if C_Farkle.IsPvE() then
-                C_Farkle:SetOpponentInfo("rolls", 0)
-                C_Farkle:SetScore("opponent", farkle.opponent.total, 0, 0)
-                S_Timer.After(2.5, function()
-                    C_Farkle:SwitchPlayerTurn()
-                    S_Timer.After(1.5, function()
-                        C_Farkle.RollDice(C_Farkle.GetBoardInfo("roll"), 6)
-                    end)
-                end)
-            end
+            C_Farkle:SetOpponentInfo("rolls", 0)
+            C_Farkle:SetScore("opponent", farkle.opponent.total, 0, 0)
         end
+        S_Timer.After(2.5, function()
+            C_Farkle:SwitchPlayerTurn()
+        end)
         S_Timer.After(2.5, function()
             C_Farkle:ClearBoard()
         end)
     else
-        C_Farkle:CancelTimer(); C_Farkle:CreateTimer()
+        C_Farkle:CreateTimer()
         if not C_Farkle.IsPlayerTurn() and C_Farkle.IsPvE() then
             S_Timer.After(3, function() C_Farkle.AISelectDice(dices) end)
         end
@@ -252,7 +238,7 @@ local function diceRoll(roll, dices)
 end
 
 function C_Farkle.RollDice(type, roll, delay, dices)
-    C_Farkle:ClearBoard(); dices, delay = dices or {}, tonumber(delay) or 0
+    C_Farkle:ClearBoard(); dices, delay = dices or {}, delay or 0
     farkle.player["dices"] = {}; farkle.opponent["dices"] = {}
     if type == "math" then
         S_Sound.Play("Interface\\AddOns\\Farkle\\Media\\Audio\\diceShaking.mp3", "Master")
@@ -260,21 +246,15 @@ function C_Farkle.RollDice(type, roll, delay, dices)
             for i = 1, roll do
                 table.insert(dices, math.random(1, 6))
             end
-            C_Farkle.SendAddonMessage(format("roll:%s:%s:%s", delay, roll, table.concat(dices, ":")))
+            if C_Farkle.IsPvP() then
+                C_Farkle.SendAddonMessage(format("roll:%s:%s:%s", delay, roll, table.concat(dices, ":")))
+            end
         end
         S_Timer.After(delay + 1.8, function()
-            diceRoll(roll, dices)
-            S_Sound.Play("Interface\\AddOns\\Farkle\\Media\\Audio\\diceRoll.mp3", "Master")
+            diceRoll(roll, dices); S_Sound.Play("Interface\\AddOns\\Farkle\\Media\\Audio\\diceRoll.mp3", "Master")
         end)
-
     elseif type == "random" then
-        local pattern = RANDOM_ROLL_RESULT
-        if C_Farkle.IsPlayerTurn() then
-            pattern = "^" .. UnitName("player") .. "%s+%S+%s+(%d+)%s+%(1%-6%)$"
-        else
-            pattern = "^" .. C_Farkle.GetOpponentInfo("name") .. "%s+%S+%s+(%d+)%s+%(1%-6%)$"
-        end
-
+        local pattern = "^" .. (C_Farkle.IsPlayerTurn() and UnitName("player") or C_Farkle.GetOpponentInfo("name")) .. "%s+%S+%s+(%d+)%s+%(1%-6%)$"
         local function chatFilter(self, event, msg, ...)
             if C_Farkle.IsPlaying() then
                 if msg:match(pattern) then
@@ -284,7 +264,6 @@ function C_Farkle.RollDice(type, roll, delay, dices)
                 ChatFrame_RemoveMessageEventFilter("CHAT_MSG_SYSTEM", self)
             end
         end
-
         local frame = CreateFrame("Frame"); frame:RegisterEvent("CHAT_MSG_SYSTEM")
         local function chatHandler(self, event, msg)
             if C_Farkle.IsPlaying() then
@@ -299,7 +278,7 @@ function C_Farkle.RollDice(type, roll, delay, dices)
                     end
                     if #dices == roll then
                         self:UnregisterEvent("CHAT_MSG_SYSTEM"); ChatFrame_RemoveMessageEventFilter("CHAT_MSG_SYSTEM", chatFilter)
-                        S_Timer.After(delay + 1.55, function()
+                        S_Timer.After((C_Farkle.IsPlayerTurn() and 1.55 or 1.55 + (select(3, GetNetStats()) / 500)), function()
                             diceRoll(roll, dices); S_Sound.Play("Interface\\AddOns\\Farkle\\Media\\Audio\\diceRoll.mp3", "Master")
                         end)
                     end
